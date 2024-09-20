@@ -1,4 +1,4 @@
-(define (problem progetto-problem1)
+(define (problem problema)
     (:domain progetto)
     
     (:objects
@@ -11,7 +11,7 @@
         c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 - cell
 
         ; tile 3
-        t3_1 t3_2 - tile
+        t3_1 t3_2 t3_3 t3_4 t3_5- tile
         
         ; tile 7
         t7_1 - tile
@@ -69,6 +69,9 @@
         ; TILE TYPES
         (tile_3 t3_1)
         (tile_3 t3_2)
+        (tile_3 t3_3)
+        (tile_3 t3_4)
+        (tile_3 t3_5)
         (tile_7 t7_1)
         (tile_a ta_1)
         (tile_c tc_1)
@@ -82,92 +85,16 @@
     )
 
     (:goal
-        ; l'obiettivo e' collegare tutti gli ori tra loro, quindi che esista una casella c collegata a tutti
-        ; gli ori
-        (exists (?c - cell)
-            ; la casella deve avere o una tile o un oro, se no in una situazione tipo: |g| |g| il goal risulta gia'
-            ; soddisfatto perche' la casella al centro e' vicina a due caselle con ori
-            (and
-                (or
-                    (has_tile ?c)
-                    (exists (?g - gold) (at ?g ?c))
+        ; l'obiettivo e' collegare tutti gli ori tra loro, per come sono costituite le azioni basta che su ogni cella con un oro ci sia posizionata una tile
+        ( forall (?c - cell)
+            (imply
+                (exists
+                    (?g - gold)
+                    (at ?g ?c)
                 )
-                (forall (?g - gold)
-                    ; o l'oro si trova nella casella c, o la casella c e' collegata all'oro, o una delle caselle
-                    ; adiacenti ha l'oro o e' collegata all'oro e c'e' una tile appropriata su c
-                    (or
-                        (at ?g ?c)
-                        (connected ?c ?g)
-                        (exists (?c2 - cell)
-                            (and
-                                ; c2 e' connessa all'oro g o ha l'oro g
-                                (or
-                                    (connected ?c2 ?g)
-                                    (at ?g ?c2)
-                                )
-                                ; c ha una tile che la collega a c2
-                                (or
-                                    ; o c2 e' a sx, e t e' di tipo {3, 6, 7, a, b, e, f}
-                                    (and
-                                        (is_left ?c2 ?c)
-                                        (or
-                                            (has_tile_3 ?c2)
-                                            (has_tile_6 ?c2)
-                                            (has_tile_7 ?c2)
-                                            (has_tile_a ?c2)
-                                            (has_tile_b ?c2)
-                                            (has_tile_e ?c2)
-                                            (has_tile_f ?c2)
-                                        )
-                                    )
-                                    ; o c2 e' a dx, e t e' di tipo { 3, 5, 7, 9, b, d, f }
-                                    (and
-                                        (is_right ?c2 ?c)
-                                        (or
-                                            (has_tile_3 ?c2)
-                                            (has_tile_5 ?c2)
-                                            (has_tile_7 ?c2)
-                                            (has_tile_9 ?c2)
-                                            (has_tile_b ?c2)
-                                            (has_tile_d ?c2)
-                                            (has_tile_f ?c2)
-                                        )
-                                    )
-                                    ; o c2 e' sopra, e t e' di tipo { 9, a, b, c, d, e, f }
-                                    (and
-                                        (is_above ?c2 ?c)
-                                        (or
-                                            (has_tile_9 ?c2)
-                                            (has_tile_a ?c2)
-                                            (has_tile_b ?c2)
-                                            (has_tile_c ?c2)
-                                            (has_tile_d ?c2)
-                                            (has_tile_e ?c2)
-                                            (has_tile_f ?c2)
-                                        )
-                                    )
-                                    ; o c2 e' sotto, e t e' di tipo { 5, 6, 7, c, d, e, f }
-                                    (and
-                                        (is_below ?c2 ?c)
-                                        (or
-                                            (has_tile_5 ?c2)
-                                            (has_tile_6 ?c2)
-                                            (has_tile_7 ?c2)
-                                            (has_tile_c ?c2)
-                                            (has_tile_d ?c2)
-                                            (has_tile_e ?c2)
-                                            (has_tile_f ?c2)
-                                        )
-                                    )
-
-                                )
-                            )
-                        )
-                    )
-                )
-            )            
+                (has_tile ?c)
+            )
         )
     )
 )
 
-; IDEE:
