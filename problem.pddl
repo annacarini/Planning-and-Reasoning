@@ -11,16 +11,16 @@
         c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 - cell
 
         ; tile 3
-        t3_1 t3_2 t3_3 t3_4 t3_5 - tile
+        t3_1 t3_2 t3_3 t3_4 t3_5 - tile_3
         
         ; tile 7
-        t7_1 - tile
+        t7_1 - tile_7
 
         ; tile a
-        ta_1 - tile
+        ta_1 - tile_a
 
         ; tile c
-        tc_1 tc_2 - tile
+        tc_1 tc_2 - tile_c
 
         ; ori
         g1 g2 g3 g4 - gold
@@ -66,17 +66,6 @@
         (is_right c11 c10)
         (is_right c12 c11)
 
-        ; TILE TYPES
-        (tile_3 t3_1)
-        (tile_3 t3_2)
-        (tile_3 t3_3)
-        (tile_3 t3_4)
-        (tile_3 t3_5)
-        (tile_7 t7_1)
-        (tile_a ta_1)
-        (tile_c tc_1)
-        (tile_c tc_2)
-
         ; posizioni degli ori
         (at g1 c1)
         (at g2 c4)
@@ -85,15 +74,11 @@
     )
 
     (:goal
-        ; l'obiettivo e' collegare tutti gli ori tra loro, per come sono costituite le azioni basta che su ogni cella con un oro ci sia posizionata una tile
-        (forall (?c - cell)
-            (imply
-                (exists
-                    (?g - gold)
-                    (at ?g ?c)
-                )
-                (has_tile ?c)
-            )
+        ; l'obiettivo e' collegare tutti gli ori tra loro, per come sono costituite le azioni basta che su ogni cella
+        ; con un oro ci sia posizionata una tile
+        (forall 
+            (?g - gold)
+            (has_tile ?g)
         )
     )
 )

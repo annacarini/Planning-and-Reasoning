@@ -4,6 +4,7 @@
     (:types
         cell - object
         tile - object
+        tile_3 tile_5 tile_6 tile_7 tile_9 tile_a tile_b tile_c tile_d tile_e tile_f - tile
         gold - object
         silver - object
     )
@@ -18,24 +19,11 @@
         ; per indicare la posizione di: tile, oro, argento
         (at ?ob - object ?c - cell)
 
-        ; non c'e' un modo per verificare i tipi delle tile, quindi usiamo dei predicati
-        (tile_3 ?t - tile)
-        (tile_5 ?t - tile)
-        (tile_6 ?t - tile)
-        (tile_7 ?t - tile)
-        (tile_9 ?t - tile)
-        (tile_a ?t - tile)
-        (tile_b ?t - tile)
-        (tile_c ?t - tile)
-        (tile_d ?t - tile)
-        (tile_e ?t - tile)
-        (tile_f ?t - tile)
-
         ; per indicare quali tile sono gia' state usate
         (used ?t - tile)
 
         ; per ridurre la complessita' delle precondizioni - senza questo predicato non funziona
-        (has_tile ?c - cell)
+        (has_tile ?ob - object)
 
         (has_tile_3 ?c - cell)
         (has_tile_5 ?c - cell)
@@ -57,15 +45,13 @@
     ;############################################### TILE 3 ###############################################
 
     (:action place_tile_3
-        :parameters (?c - cell ?t - tile)
+        :parameters (?c - cell ?t - tile_3)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a dx o a sx ci deve essere o un oro o una tile,
             ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile a dx
             ; deve essere di tipo { 3, 6, 7, a, b, e, f }
 
-            ; t deve essere una tile_3
-            (tile_3 ?t)
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -146,22 +132,29 @@
 
             ; segna che abbiamo messo (almeno) una tile
             (first_tile_positioned)
+
+            (forall (?g - gold)
+                ; se l'oro e' su questa cella, allora l'oro ha una tile
+                (when 
+                    (at ?g ?c)
+                    (has_tile ?g)
+                )
+            )
         )
+
     )
 
 
     ;############################################### TILE 5 ###############################################
 
     (:action place_tile_5
-        :parameters (?c - cell ?t - tile)
+        :parameters (?c - cell ?t - tile_5)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella a dx o sotto ci deve essere o un oro o una tile,
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
-            ; t deve essere una tile_5
-            (tile_5 ?t)
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -240,6 +233,14 @@
             (used ?t)
 
             (first_tile_positioned)
+
+            (forall (?g - gold)
+                ; se l'oro e' su questa cella, allora l'oro ha una tile
+                (when 
+                    (at ?g ?c)
+                    (has_tile ?g)
+                )
+            )
         )
     )
 
@@ -248,15 +249,13 @@
     ;############################################### TILE 6 ###############################################
 
     (:action place_tile_6
-        :parameters (?c - cell ?t - tile)
+        :parameters (?c - cell ?t - tile_6)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella a sx o sotto ci deve essere o un oro o una tile,
             ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
-            ; t deve essere una tile_6
-            (tile_6 ?t)
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -322,11 +321,6 @@
                     )
                 )
             )
-
-
-
-
-
         )
 
         :effect (and
@@ -339,6 +333,14 @@
             (used ?t)
 
             (first_tile_positioned)
+
+            (forall (?g - gold)
+                ; se l'oro e' su questa cella, allora l'oro ha una tile
+                (when 
+                    (at ?g ?c)
+                    (has_tile ?g)
+                )
+            )
         )
     )
 
@@ -347,16 +349,13 @@
     ;############################################### TILE 7 ###############################################
 
     (:action place_tile_7
-        :parameters (?c - cell ?t - tile)
+        :parameters (?c - cell ?t - tile_7)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a sx o dx o sotto ci deve essere o un oro o una tile,
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
             ; { 3, 5, 7, 9, b, d, f }
-
-            ; t deve essere una tile_7
-            (tile_7 ?t)
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -453,6 +452,14 @@
             (used ?t)
 
             (first_tile_positioned)
+
+            (forall (?g - gold)
+                ; se l'oro e' su questa cella, allora l'oro ha una tile
+                (when 
+                    (at ?g ?c)
+                    (has_tile ?g)
+                )
+            )
         )
     )
 
@@ -461,15 +468,13 @@
     ;############################################### TILE 9 ###############################################
 
     (:action place_tile_9
-        :parameters (?c - cell ?t - tile)
+        :parameters (?c - cell ?t - tile_9)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a dx o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sopra
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
-            ; t deve essere una tile_9
-            (tile_9 ?t)
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -547,6 +552,14 @@
             (used ?t)
 
             (first_tile_positioned)
+        
+            (forall (?g - gold)
+                ; se l'oro e' su questa cella, allora l'oro ha una tile
+                (when 
+                    (at ?g ?c)
+                    (has_tile ?g)
+                )
+            )
         )
     )
 
@@ -555,15 +568,13 @@
     ;############################################### TILE A ###############################################
 
     (:action place_tile_a
-        :parameters (?c - cell ?t - tile)
+        :parameters (?c - cell ?t - tile_a)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a sx o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile a sx deve essere di tipo:
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
-            ; t deve essere una tile_a
-            (tile_a ?t)
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -640,6 +651,14 @@
             (used ?t)
 
             (first_tile_positioned)
+
+            (forall (?g - gold)
+                ; se l'oro e' su questa cella, allora l'oro ha una tile
+                (when 
+                    (at ?g ?c)
+                    (has_tile ?g)
+                )
+            )
         )
     )
 
@@ -649,15 +668,12 @@
     ;############################################### TILE B ###############################################
 
     (:action place_tile_b
-        :parameters (?c - cell ?t - tile)
+        :parameters (?c - cell ?t - tile_b)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a sx o dx o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile a sx deve essere
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-            ; t deve essere una tile_b
-            (tile_b ?t)
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -741,10 +757,6 @@
                     )
                 )
             )
-
-
-
-
         )
 
         :effect (and
@@ -757,6 +769,14 @@
             (used ?t)
 
             (first_tile_positioned)
+        
+            (forall (?g - gold)
+                ; se l'oro e' su questa cella, allora l'oro ha una tile
+                (when 
+                    (at ?g ?c)
+                    (has_tile ?g)
+                )
+            )
         )
     )
 
@@ -766,15 +786,13 @@
     ;############################################### TILE C ###############################################
 
     (:action place_tile_c
-        :parameters (?c - cell ?t - tile)
+        :parameters (?c - cell ?t - tile_c)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o sotto o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
-            ; t deve essere una tile_c
-            (tile_c ?t)
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -851,6 +869,14 @@
             (used ?t)
 
             (first_tile_positioned)
+        
+            (forall (?g - gold)
+                ; se l'oro e' su questa cella, allora l'oro ha una tile
+                (when 
+                    (at ?g ?c)
+                    (has_tile ?g)
+                )
+            )
         )
     )
 
@@ -859,15 +885,13 @@
     ;############################################### TILE D ###############################################
 
     (:action place_tile_d
-        :parameters (?c - cell ?t - tile)
+        :parameters (?c - cell ?t - tile_d)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a dx o sotto o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
-            ; t deve essere una tile_d
-            (tile_d ?t)
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -951,10 +975,6 @@
                     )
                 )         
             )
-
-
-
-
         )
 
         :effect (and
@@ -967,6 +987,14 @@
             (used ?t)
 
             (first_tile_positioned)
+        
+            (forall (?g - gold)
+                ; se l'oro e' su questa cella, allora l'oro ha una tile
+                (when 
+                    (at ?g ?c)
+                    (has_tile ?g)
+                )
+            )
         )
     )
 
@@ -975,15 +1003,13 @@
     ;############################################### TILE E ###############################################
 
     (:action place_tile_e
-        :parameters (?c - cell ?t - tile)
+        :parameters (?c - cell ?t - tile_e)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a sx o sotto o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
-            ; t deve essere una tile_e
-            (tile_e ?t)
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1069,9 +1095,6 @@
                     )
                 )
             )
-
-
-
         )
 
         :effect (and
@@ -1084,6 +1107,14 @@
             (used ?t)
 
             (first_tile_positioned)
+        
+            (forall (?g - gold)
+                ; se l'oro e' su questa cella, allora l'oro ha una tile
+                (when 
+                    (at ?g ?c)
+                    (has_tile ?g)
+                )
+            )
         )
     )
 
@@ -1093,7 +1124,7 @@
     ;############################################### TILE F ###############################################
 
     (:action place_tile_f
-        :parameters (?c - cell ?t - tile)
+        :parameters (?c - cell ?t - tile_f)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a sx o dx o sotto o sopra ci deve essere o un oro o una tile,
@@ -1218,6 +1249,14 @@
             (used ?t)
 
             (first_tile_positioned)
+        
+            (forall (?g - gold)
+                ; se l'oro e' su questa cella, allora l'oro ha una tile
+                (when 
+                    (at ?g ?c)
+                    (has_tile ?g)
+                )
+            )
         )
     )
 )
