@@ -14,9 +14,6 @@
         (is_below ?c1 - cell ?c2 - cell)
         (is_right ?c1 - cell ?c2 - cell)
         (is_left ?c1 - cell ?c2 - cell)
-
-        ; per indicare se una cella e' connessa a un oro
-        (connected ?ob - object ?g - gold)
     
         ; per indicare la posizione di: tile, oro, argento
         (at ?ob - object ?c - cell)

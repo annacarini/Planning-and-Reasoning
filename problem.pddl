@@ -11,7 +11,7 @@
         c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 - cell
 
         ; tile 3
-        t3_1 t3_2 t3_3 t3_4 t3_5- tile
+        t3_1 t3_2 t3_3 t3_4 t3_5 - tile
         
         ; tile 7
         t7_1 - tile
@@ -86,7 +86,7 @@
 
     (:goal
         ; l'obiettivo e' collegare tutti gli ori tra loro, per come sono costituite le azioni basta che su ogni cella con un oro ci sia posizionata una tile
-        ( forall (?c - cell)
+        (forall (?c - cell)
             (imply
                 (exists
                     (?g - gold)
