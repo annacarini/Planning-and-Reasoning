@@ -85,11 +85,11 @@
         ; l'obiettivo e' collegare tutti gli ori tra loro, quindi che esista una casella c collegata a tutti
         ; gli ori
         (exists (?c - cell)
-            ; la casella deve avere o una tile o un oro, se no in una situazione tipo: |g| |g| risulta gia'
-            ; soddisfatto l'obiettivo perche' la casella al centro e' vicina a due caselle con ori
+            ; la casella deve avere o una tile o un oro, se no in una situazione tipo: |g| |g| il goal risulta gia'
+            ; soddisfatto perche' la casella al centro e' vicina a due caselle con ori
             (and
                 (or
-                    (exists (?t - tile) (at ?t ?c))
+                    (has_tile ?c)
                     (exists (?g - gold) (at ?g ?c))
                 )
                 (forall (?g - gold)
@@ -106,64 +106,60 @@
                                     (at ?g ?c2)
                                 )
                                 ; c ha una tile che la collega a c2
-                                (exists (?t - tile)
+                                (or
+                                    ; o c2 e' a sx, e t e' di tipo {3, 6, 7, a, b, e, f}
                                     (and
-                                        (at ?t ?c)
+                                        (is_left ?c2 ?c)
                                         (or
-                                            ; o c2 e' a sx, e t e' di tipo {3, 6, 7, a, b, e, f}
-                                            (and
-                                                (is_left ?c2 ?c)
-                                                (or
-                                                    (tile_3 ?t)
-                                                    (tile_6 ?t)
-                                                    (tile_7 ?t)
-                                                    (tile_a ?t)
-                                                    (tile_b ?t)
-                                                    (tile_e ?t)
-                                                    (tile_f ?t)
-                                                )
-                                            )
-                                            ; o c2 e' a dx, e t e' di tipo { 3, 5, 7, 9, b, d, f }
-                                            (and
-                                                (is_right ?c2 ?c)
-                                                (or
-                                                    (tile_3 ?t)
-                                                    (tile_5 ?t)
-                                                    (tile_7 ?t)
-                                                    (tile_9 ?t)
-                                                    (tile_b ?t)
-                                                    (tile_d ?t)
-                                                    (tile_f ?t)
-                                                )
-                                            )
-                                            ; o c2 e' sopra, e t e' di tipo { 9, a, b, c, d, e, f }
-                                            (and
-                                                (is_above ?c2 ?c)
-                                                (or
-                                                    (tile_9 ?t)
-                                                    (tile_a ?t)
-                                                    (tile_b ?t)
-                                                    (tile_c ?t)
-                                                    (tile_d ?t)
-                                                    (tile_e ?t)
-                                                    (tile_f ?t)
-                                                )
-                                            )
-                                            ; o c2 e' sotto, e t e' di tipo { 5, 6, 7, c, d, e, f }
-                                            (and
-                                                (is_below ?c2 ?c)
-                                                (or
-                                                    (tile_5 ?t)
-                                                    (tile_6 ?t)
-                                                    (tile_7 ?t)
-                                                    (tile_c ?t)
-                                                    (tile_d ?t)
-                                                    (tile_e ?t)
-                                                    (tile_f ?t)
-                                                )
-                                            )
-                                        )           
+                                            (has_tile_3 ?c2)
+                                            (has_tile_6 ?c2)
+                                            (has_tile_7 ?c2)
+                                            (has_tile_a ?c2)
+                                            (has_tile_b ?c2)
+                                            (has_tile_e ?c2)
+                                            (has_tile_f ?c2)
+                                        )
                                     )
+                                    ; o c2 e' a dx, e t e' di tipo { 3, 5, 7, 9, b, d, f }
+                                    (and
+                                        (is_right ?c2 ?c)
+                                        (or
+                                            (has_tile_3 ?c2)
+                                            (has_tile_5 ?c2)
+                                            (has_tile_7 ?c2)
+                                            (has_tile_9 ?c2)
+                                            (has_tile_b ?c2)
+                                            (has_tile_d ?c2)
+                                            (has_tile_f ?c2)
+                                        )
+                                    )
+                                    ; o c2 e' sopra, e t e' di tipo { 9, a, b, c, d, e, f }
+                                    (and
+                                        (is_above ?c2 ?c)
+                                        (or
+                                            (has_tile_9 ?c2)
+                                            (has_tile_a ?c2)
+                                            (has_tile_b ?c2)
+                                            (has_tile_c ?c2)
+                                            (has_tile_d ?c2)
+                                            (has_tile_e ?c2)
+                                            (has_tile_f ?c2)
+                                        )
+                                    )
+                                    ; o c2 e' sotto, e t e' di tipo { 5, 6, 7, c, d, e, f }
+                                    (and
+                                        (is_below ?c2 ?c)
+                                        (or
+                                            (has_tile_5 ?c2)
+                                            (has_tile_6 ?c2)
+                                            (has_tile_7 ?c2)
+                                            (has_tile_c ?c2)
+                                            (has_tile_d ?c2)
+                                            (has_tile_e ?c2)
+                                            (has_tile_f ?c2)
+                                        )
+                                    )
+
                                 )
                             )
                         )

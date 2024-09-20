@@ -4,7 +4,6 @@
     (:types
         cell - object
         tile - object
-        ;tile_3 tile_5 tile_6 tile_7 tile_9 tile_a tile_b tile_c tile_d tile_e tile_f - tile
         gold - object
         silver - object
     )
@@ -20,7 +19,7 @@
         (connected ?ob - object ?g - gold)
     
         ; per indicare la posizione di: tile, oro, argento
-        (at ?o - object ?c - cell)
+        (at ?ob - object ?c - cell)
 
         ; non c'e' un modo per verificare i tipi delle tile, quindi usiamo dei predicati
         (tile_3 ?t - tile)
@@ -38,8 +37,20 @@
         ; per indicare quali tile sono gia' state usate
         (used ?t - tile)
 
-        ; per ridurre la complessita' delle precondizioni?
-        (has_tile ?c)
+        ; per ridurre la complessita' delle precondizioni - senza questo predicato non funziona
+        (has_tile ?c - cell)
+
+        (has_tile_3 ?c - cell)
+        (has_tile_5 ?c - cell)
+        (has_tile_6 ?c - cell)
+        (has_tile_7 ?c - cell)
+        (has_tile_9 ?c - cell)
+        (has_tile_a ?c - cell)
+        (has_tile_b ?c - cell)
+        (has_tile_c ?c - cell)
+        (has_tile_d ?c - cell)
+        (has_tile_e ?c - cell)
+        (has_tile_f ?c - cell)
     )
 
 
@@ -60,7 +71,7 @@
             (not (used ?t))
             
             ; non ci deve essere una tile su c
-            (not (exists (?t - tile) (at ?t ?c)))
+            (not (has_tile ?c))
             
             ; deve esserci almeno una cella c2 a dx o a sx con un oro o una tile
             (exists (?c2 - cell)
@@ -73,7 +84,7 @@
                         ; o c'e' un oro
                         (exists (?g - gold) (at ?g ?c2))
                         ; o c'e' una tile
-                        (exists (?t2 - tile) (at ?t2 ?c2))
+                        (has_tile ?c2)
                     )
                 )    
             )
@@ -85,23 +96,17 @@
                     (imply
                         (and
                             (is_left ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_5 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_9 ?t2)
-                                    (tile_b ?t2)
-                                    (tile_d ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_5 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_9 ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
                 
@@ -109,23 +114,17 @@
                     (imply
                         (and
                             (is_right ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )   
                     )
                 )
@@ -135,8 +134,8 @@
         :effect (and
             ; c'e' la tile t su c
             (at ?t ?c)
-
             (has_tile ?c)
+            (has_tile_3 ?c)
 
             ; t e' usata
             (used ?t)
@@ -188,7 +187,7 @@
             (not (used ?t))
             
             ; non ci deve essere una tile su c
-            (not (exists (?t - tile) (at ?t ?c)))
+            (not (has_tile ?c))
 
             ; deve esserci almeno una cella c2 a dx o sotto con un oro o una tile
             (exists (?c2 - cell)
@@ -201,7 +200,7 @@
                         ; o c'e' un oro
                         (exists (?g - gold) (at ?g ?c2))
                         ; o c'e' una tile
-                        (exists (?t2 - tile) (at ?t2 ?c2))
+                        (has_tile ?c2)
                     )
                 )    
             )
@@ -213,47 +212,35 @@
                     (imply
                         (and
                             (is_right ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
-                        )   
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
+                        )  
                     )
                 
                     ; se sta sotto e ha una tile
                     (imply
                         (and
                             (is_below ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_9 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_9 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
                 )
@@ -263,8 +250,8 @@
         :effect (and
             ; c'e' la tile t su c
             (at ?t ?c)
-
             (has_tile ?c)
+            (has_tile_5 ?c)
 
             ; t e' usata
             (used ?t)
@@ -317,7 +304,7 @@
             (not (used ?t))
             
             ; non ci deve essere una tile su c
-            (not (exists (?t - tile) (at ?t ?c)))
+            (not (has_tile ?c))
             
             ; deve esserci almeno una cella c2 a sx o sotto con un oro o una tile
             (exists (?c2 - cell)
@@ -330,7 +317,7 @@
                         ; o c'e' un oro
                         (exists (?g - gold) (at ?g ?c2))
                         ; o c'e' una tile
-                        (exists (?t2 - tile) (at ?t2 ?c2))
+                        (has_tile ?c2)
                     )
                 )    
             )
@@ -343,23 +330,17 @@
                     (imply 
                         (and
                             (is_left ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_5 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_9 ?t2)
-                                    (tile_b ?t2)
-                                    (tile_d ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_5 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_9 ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
                 
@@ -367,23 +348,17 @@
                     (imply
                         (and
                             (is_below ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_9 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_9 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
                 )
@@ -393,8 +368,8 @@
         :effect (and
             ; c'e' la tile t su c
             (at ?t ?c)
-
             (has_tile ?c)
+            (has_tile_6 ?c)
 
             ; t e' usata
             (used ?t)
@@ -448,7 +423,7 @@
             (not (used ?t))
             
             ; non ci deve essere una tile su c
-            (not (exists (?t - tile) (at ?t ?c)))
+            (not (has_tile ?c))
     
             ; deve esserci almeno una cella c2 a sx o dx o sotto con un oro o una tile
             (exists (?c2 - cell)
@@ -462,7 +437,7 @@
                         ; o c'e' un oro
                         (exists (?g - gold) (at ?g ?c2))
                         ; o c'e' una tile
-                        (exists (?t2 - tile) (at ?t2 ?c2))
+                        (has_tile ?c2)
                     )
                 )    
             )
@@ -474,23 +449,17 @@
                     (imply 
                         (and
                             (is_left ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_5 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_9 ?t2)
-                                    (tile_b ?t2)
-                                    (tile_d ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_5 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_9 ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
 
@@ -498,48 +467,37 @@
                     (imply
                         (and
                             (is_right ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
-                        )   
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
+                        )  
                     )
                 
                     ; se sta sotto e ha una tile
                     (imply
                         (and
                             (is_below ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_9 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_9 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
+
                     )
                 )
             )
@@ -548,8 +506,8 @@
         :effect (and
             ; c'e' la tile t su c
             (at ?t ?c)
-
             (has_tile ?c)
+            (has_tile_7 ?c)
 
             ; t e' usata
             (used ?t)
@@ -602,7 +560,7 @@
             (not (used ?t))
             
             ; non ci deve essere una tile su c
-            (not (exists (?t - tile) (at ?t ?c)))
+            (not (has_tile ?c))
             
             ; deve esserci almeno una cella c2 a dx o sopra con un oro o una tile
             (exists (?c2 - cell)
@@ -615,7 +573,7 @@
                         ; o c'e' un oro
                         (exists (?g - gold) (at ?g ?c2))
                         ; o c'e' una tile
-                        (exists (?t2 - tile) (at ?t2 ?c2))
+                        (has_tile ?c2)
                     )
                 )    
             )
@@ -627,23 +585,17 @@
                     (imply
                         (and
                             (is_right ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )   
                     )
                                   
@@ -651,23 +603,17 @@
                     (imply
                         (and
                             (is_above ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_5 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_5 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )  
                 )
@@ -677,8 +623,8 @@
         :effect (and
             ; c'e' la tile t su c
             (at ?t ?c)
-
             (has_tile ?c)
+            (has_tile_9 ?c)
 
             ; t e' usata
             (used ?t)
@@ -730,7 +676,7 @@
             (not (used ?t))
             
             ; non ci deve essere una tile su c
-            (not (exists (?t - tile) (at ?t ?c)))
+            (not (has_tile ?c))
 
             ; deve esserci almeno una cella c2 a sx o sopra con un oro o una tile
             (exists (?c2 - cell)
@@ -743,7 +689,7 @@
                         ; o c'e' un oro
                         (exists (?g - gold) (at ?g ?c2))
                         ; o c'e' una tile
-                        (exists (?t2 - tile) (at ?t2 ?c2))
+                        (has_tile ?c2)
                     )
                 )    
             )
@@ -755,23 +701,17 @@
                     (imply 
                         (and
                             (is_left ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_5 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_9 ?t2)
-                                    (tile_b ?t2)
-                                    (tile_d ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_5 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_9 ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
         
@@ -779,23 +719,17 @@
                     (imply
                         (and
                             (is_above ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_5 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_5 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )  
                 )
@@ -805,8 +739,8 @@
         :effect (and
             ; c'e' la tile t su c
             (at ?t ?c)
-
             (has_tile ?c)
+            (has_tile_a ?c)
 
             ; t e' usata
             (used ?t)
@@ -859,7 +793,7 @@
             (not (used ?t))
             
             ; non ci deve essere una tile su c
-            (not (exists (?t - tile) (at ?t ?c)))
+            (not (has_tile ?c))
 
             ; deve esserci almeno una cella c2 a sx o dx o sopra con un oro o una tile
             (exists (?c2 - cell)
@@ -873,7 +807,7 @@
                         ; o c'e' un oro
                         (exists (?g - gold) (at ?g ?c2))
                         ; o c'e' una tile
-                        (exists (?t2 - tile) (at ?t2 ?c2))
+                        (has_tile ?c2)
                     )
                 )    
             )
@@ -885,23 +819,17 @@
                     (imply 
                         (and
                             (is_left ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_5 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_9 ?t2)
-                                    (tile_b ?t2)
-                                    (tile_d ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_5 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_9 ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
 
@@ -909,23 +837,17 @@
                     (imply
                         (and
                             (is_right ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )   
                     )
                     
@@ -933,23 +855,17 @@
                     (imply
                         (and
                             (is_above ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_5 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_5 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )  
                 )
@@ -959,8 +875,8 @@
         :effect (and
             ; c'e' la tile t su c
             (at ?t ?c)
-
             (has_tile ?c)
+            (has_tile_b ?c)
 
             ; t e' usata
             (used ?t)
@@ -1014,7 +930,7 @@
             (not (used ?t))
             
             ; non ci deve essere una tile su c
-            (not (exists (?t - tile) (at ?t ?c)))
+            (not (has_tile ?c))
 
             ; deve esserci almeno una cella sopra o sotto con un oro o una tile
             (exists (?c2 - cell)
@@ -1027,7 +943,7 @@
                         ; o c'e' un oro
                         (exists (?g - gold) (at ?g ?c2))
                         ; o c'e' una tile
-                        (exists (?t2 - tile) (at ?t2 ?c2))
+                        (has_tile ?c2)
                     )
                 )    
             )
@@ -1039,23 +955,17 @@
                     (imply
                         (and
                             (is_below ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_9 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_9 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
                     
@@ -1063,23 +973,17 @@
                     (imply
                         (and
                             (is_above ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_5 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_5 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )   
                 )
@@ -1089,8 +993,8 @@
         :effect (and
             ; c'e' la tile t su c
             (at ?t ?c)
-
             (has_tile ?c)
+            (has_tile_c ?c)
 
             ; t e' usata
             (used ?t)
@@ -1142,7 +1046,7 @@
             (not (used ?t))
             
             ; non ci deve essere una tile su c
-            (not (exists (?t - tile) (at ?t ?c)))
+            (not (has_tile ?c))
 
             ; deve esserci almeno una cella a dx o sopra o sotto con un oro o una tile
             (exists (?c2 - cell)
@@ -1156,7 +1060,7 @@
                         ; o c'e' un oro
                         (exists (?g - gold) (at ?g ?c2))
                         ; o c'e' una tile
-                        (exists (?t2 - tile) (at ?t2 ?c2))
+                        (has_tile ?c2)
                     )
                 )    
             )
@@ -1169,47 +1073,35 @@
                     (imply
                         (and
                             (is_right ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
-                        )   
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
+                        )    
                     )
                 
                     ; se sta sotto e ha una tile
                     (imply
                         (and
                             (is_below ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_9 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_9 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
                     
@@ -1217,23 +1109,17 @@
                     (imply
                         (and
                             (is_above ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_5 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_5 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )  
                 )
@@ -1243,8 +1129,8 @@
         :effect (and
             ; c'e' la tile t su c
             (at ?t ?c)
-
             (has_tile ?c)
+            (has_tile_d ?c)
 
             ; t e' usata
             (used ?t)
@@ -1297,7 +1183,7 @@
             (not (used ?t))
             
             ; non ci deve essere una tile su c
-            (not (exists (?t - tile) (at ?t ?c)))
+            (not (has_tile ?c))
 
             ; deve esserci almeno una cella a sx o sopra o sotto con un oro o una tile
             (exists (?c2 - cell)
@@ -1311,7 +1197,7 @@
                         ; o c'e' un oro
                         (exists (?g - gold) (at ?g ?c2))
                         ; o c'e' una tile
-                        (exists (?t2 - tile) (at ?t2 ?c2))
+                        (has_tile ?c2)
                     )
                 )    
             )
@@ -1323,23 +1209,17 @@
                     (imply 
                         (and
                             (is_left ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_5 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_9 ?t2)
-                                    (tile_b ?t2)
-                                    (tile_d ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_5 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_9 ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
 
@@ -1347,23 +1227,17 @@
                     (imply
                         (and
                             (is_below ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_9 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_9 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
                     
@@ -1371,23 +1245,17 @@
                     (imply
                         (and
                             (is_above ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_5 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_5 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )  
                 )
@@ -1397,8 +1265,8 @@
         :effect (and
             ; c'e' la tile t su c
             (at ?t ?c)
-
             (has_tile ?c)
+            (has_tile_e ?c)
 
             ; t e' usata
             (used ?t)
@@ -1453,7 +1321,7 @@
             (not (used ?t))
             
             ; non ci deve essere una tile su c
-            (not (exists (?t - tile) (at ?t ?c)))
+            (not (has_tile ?c))
 
             ; deve esserci almeno una cella a sx o dx o sopra o sotto con un oro o una tile
             (exists (?c2 - cell)
@@ -1468,7 +1336,7 @@
                         ; o c'e' un oro
                         (exists (?g - gold) (at ?g ?c2))
                         ; o c'e' una tile
-                        (exists (?t2 - tile) (at ?t2 ?c2))
+                        (has_tile ?c2)
                     )
                 )    
             )
@@ -1480,23 +1348,17 @@
                     (imply 
                         (and
                             (is_left ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
-                        ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_5 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_9 ?t2)
-                                    (tile_b ?t2)
-                                    (tile_d ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+			            ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_5 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_9 ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
                 
@@ -1504,47 +1366,35 @@
                     (imply
                         (and
                             (is_right ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_3 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
-                        )   
+                        (or
+                            (has_tile_3 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
+                        )    
                     )
                 
                     ; se sta sotto e ha una tile
                     (imply
                         (and
                             (is_below ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_9 ?t2)
-                                    (tile_a ?t2)
-                                    (tile_b ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_9 ?c2)
+                            (has_tile_a ?c2)
+                            (has_tile_b ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )
                     
@@ -1552,23 +1402,17 @@
                     (imply
                         (and
                             (is_above ?c2 ?c)
-                            ;(exists (?t2 - tile) (at ?t2 ?c2))
                             (has_tile ?c2)
                         )
                         ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                        (exists (?t2 - tile)
-                            (and
-                                (at ?t2 ?c2)
-                                (or
-                                    (tile_5 ?t2)
-                                    (tile_6 ?t2)
-                                    (tile_7 ?t2)
-                                    (tile_c ?t2)
-                                    (tile_d ?t2)
-                                    (tile_e ?t2)
-                                    (tile_f ?t2)
-                                )
-                            )
+                        (or
+                            (has_tile_5 ?c2)
+                            (has_tile_6 ?c2)
+                            (has_tile_7 ?c2)
+                            (has_tile_c ?c2)
+                            (has_tile_d ?c2)
+                            (has_tile_e ?c2)
+                            (has_tile_f ?c2)
                         )
                     )  
                 )
@@ -1578,8 +1422,8 @@
         :effect (and
             ; c'e' la tile t su c
             (at ?t ?c)
-
             (has_tile ?c)
+            (has_tile_f ?c)
 
             ; t e' usata
             (used ?t)
