@@ -65,10 +65,9 @@
         (is_right c12 c11)
 
         ; posizioni degli ori
-        (has_gold c1)
-        (has_gold c4)
-        (has_gold c9)
-        (has_gold c11)
+        
+
+        (= (total-cost) 0)
     )
 
     (:goal
