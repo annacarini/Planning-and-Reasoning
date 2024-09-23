@@ -22,8 +22,6 @@
         ; tile c
         tc_1 tc_2 - tile_c
 
-        ; ori
-        g1 g2 g3 g4 - gold
     )
 
     (:init
@@ -67,18 +65,20 @@
         (is_right c12 c11)
 
         ; posizioni degli ori
-        (at g1 c1)
-        (at g2 c4)
-        (at g3 c9)
-        (at g4 c11)
+        (has_gold c1)
+        (has_gold c4)
+        (has_gold c9)
+        (has_gold c11)
     )
 
     (:goal
         ; l'obiettivo e' collegare tutti gli ori tra loro, per come sono costituite le azioni basta che su ogni cella
         ; con un oro ci sia posizionata una tile
-        (forall 
-            (?g - gold)
-            (has_tile ?g)
+        (and
+            (has_tile c1)
+            (has_tile c4)
+            (has_tile c9)
+            (has_tile c11)
         )
     )
 )

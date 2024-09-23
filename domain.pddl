@@ -1,12 +1,10 @@
 (define (domain progetto)
-    (:requirements :strips :typing)
+    (:requirements :strips :typing :disjunctive-preconditions :negative-preconditions)
 
     (:types
         cell - object
         tile - object
         tile_3 tile_5 tile_6 tile_7 tile_9 tile_a tile_b tile_c tile_d tile_e tile_f - tile
-        gold - object
-        silver - object
     )
 
     (:predicates
@@ -15,27 +13,22 @@
         (is_below ?c1 - cell ?c2 - cell)
         (is_right ?c1 - cell ?c2 - cell)
         (is_left ?c1 - cell ?c2 - cell)
+
+        (has_gold ?c - cell)
+        (has_silver ?c - cell)
     
-        ; per indicare la posizione di: tile, oro, argento
-        (at ?ob - object ?c - cell)
 
         ; per indicare quali tile sono gia' state usate
         (used ?t - tile)
 
         ; per ridurre la complessita' delle precondizioni - senza questo predicato non funziona
-        (has_tile ?ob - object)
+        (has_tile ?c - cell)
 
-        (has_tile_3 ?c - cell)
-        (has_tile_5 ?c - cell)
-        (has_tile_6 ?c - cell)
-        (has_tile_7 ?c - cell)
-        (has_tile_9 ?c - cell)
-        (has_tile_a ?c - cell)
-        (has_tile_b ?c - cell)
-        (has_tile_c ?c - cell)
-        (has_tile_d ?c - cell)
-        (has_tile_e ?c - cell)
-        (has_tile_f ?c - cell)
+        (open_left ?c - cell)
+        (open_right ?c - cell)
+        (open_above ?c - cell)
+        (open_below ?c - cell)
+
 
         ; per indicare se abbiamo messo la prima tile
         (first_tile_positioned)
@@ -66,66 +59,34 @@
 
                 ; oppure c'e' una cella o a dx o a sx che ha una tile, e se ci sono celle a dx o sx con tile
                 ; devono essere tile appropriate
-                (and
-                    (exists (?c2 - cell)
+            
+                (exists (?c2 - cell)
+                    
+                    (or
                         (and
-                            (or
-                                (is_left ?c2 ?c)
-                                (is_right ?c2 ?c)
-                            )
-                            (has_tile ?c2)
-                        )    
-                    )
-                    ; se una cella c2 e' a dx o a sx e ha una tile, deve essere appropriata
-                    (forall (?c2 - cell)
-                        (and
-                            ; se sta a sx e ha una tile
-                            (imply
-                                (and
-                                    (is_left ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_5 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_9 ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
-                        
-                            ; se sta a dx e ha una tile
-                            (imply
-                                (and
-                                    (is_right ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )   
-                            )
+                            (is_left ?c2 ?c)
+                            (open_right ?c2)
                         )
+                        (and
+                            (is_right ?c2 ?c)
+                            (open_left ?c2)
+                        )
+                        
                     )
+                        
+                        
                 )
+                    ; se una cella c2 e' a dx o a sx e ha una tile, deve essere appropriata
+                
             )
 
         )
 
         :effect (and
-            ; c'e' la tile t su c
-            (at ?t ?c)
+        
             (has_tile ?c)
-            (has_tile_3 ?c)
+            (open_right ?c)
+            (open_left ?c)
 
             ; t e' usata
             (used ?t)
@@ -133,13 +94,6 @@
             ; segna che abbiamo messo (almeno) una tile
             (first_tile_positioned)
 
-            (forall (?g - gold)
-                ; se l'oro e' su questa cella, allora l'oro ha una tile
-                (when 
-                    (at ?g ?c)
-                    (has_tile ?g)
-                )
-            )
         )
 
     )
@@ -167,80 +121,43 @@
                 ; o non abbiamo ancora messo nessuna tile
                 (not (first_tile_positioned))
 
-                (and
+               
                     ; deve esserci almeno una cella c2 a dx o sotto con un oro o una tile
-                    (exists (?c2 - cell)
+                (exists (?c2 - cell)
+                    
+                    (or
                         (and
-                            (or
-                                (is_right ?c2 ?c)
-                                (is_below ?c2 ?c)
-                            )
-                            (has_tile ?c2)
-                        )    
-                    )
-
-                    ; o a dx o sotto ci deve essere un oro o una tile
-                    (forall (?c2 - cell)
-                        (and
-                            ; se sta a dx e ha una tile
-                            (imply
-                                (and
-                                    (is_right ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )  
-                            )
-                        
-                            ; se sta sotto e ha una tile
-                            (imply
-                                (and
-                                    (is_below ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                                (or
-                                    (has_tile_9 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
+                            (is_right ?c2 ?c)
+                            (open_left ?c2)  
                         )
+                        (and
+                            (is_below ?c2 ?c)
+                            (open_above ?c2)
+                        )
+                        
+                        
                     )
+                        
+                        
                 )
+
+              
             )
         )
 
         :effect (and
             ; c'e' la tile t su c
-            (at ?t ?c)
+            
             (has_tile ?c)
-            (has_tile_5 ?c)
+            (open_below ?c)
+            (open_right ?c)
 
             ; t e' usata
             (used ?t)
 
             (first_tile_positioned)
 
-            (forall (?g - gold)
-                ; se l'oro e' su questa cella, allora l'oro ha una tile
-                (when 
-                    (at ?g ?c)
-                    (has_tile ?g)
-                )
-            )
+        
         )
     )
 
@@ -268,79 +185,41 @@
                 ; o non abbiamo ancora messo nessuna tile
                 (not (first_tile_positioned))
 
-                (and
+                
                     ; deve esserci almeno una cella c2 a sx o sotto con un oro o una tile
-                    (exists (?c2 - cell)
+                (exists (?c2 - cell)
+                
+                    (or
                         (and
-                            (or
-                                (is_left ?c2 ?c)
-                                (is_below ?c2 ?c)
-                            )
-                            (has_tile ?c2)
-                        )    
-                    )
-                    ; o a sx o sotto ci deve essere un oro o una tile
-                    (forall (?c2 - cell)
-                        (and
-                            ; se sta a sx e ha una tile
-                            (imply 
-                                (and
-                                    (is_left ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_5 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_9 ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
-                        
-                            ; se sta sotto e ha una tile
-                            (imply
-                                (and
-                                    (is_below ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                                (or
-                                    (has_tile_9 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
+                            (is_left ?c2 ?c)                     
+                            (open_right ?c2)
                         )
+                        (and
+                            (is_below ?c2 ?c)
+                            (open_above ?c2)
+                        )
+                        
                     )
+                        
                 )
+                   
+                
             )
         )
 
         :effect (and
             ; c'e' la tile t su c
-            (at ?t ?c)
+            
             (has_tile ?c)
-            (has_tile_6 ?c)
+            (open_below ?c)
+            (open_left ?c)
 
             ; t e' usata
             (used ?t)
 
             (first_tile_positioned)
 
-            (forall (?g - gold)
-                ; se l'oro e' su questa cella, allora l'oro ha una tile
-                (when 
-                    (at ?g ?c)
-                    (has_tile ?g)
-                )
-            )
+            
         )
     )
 
@@ -367,99 +246,48 @@
                 ; o non abbiamo ancora messo nessuna tile
                 (not (first_tile_positioned))
 
-                (and
+               
                     ; deve esserci almeno una cella c2 a sx o dx o sotto con un oro o una tile
-                    (exists (?c2 - cell)
+                (exists (?c2 - cell)
+                    
+                    (or
                         (and
-                            (or
-                                (is_left ?c2 ?c)
-                                (is_right ?c2 ?c)
-                                (is_below ?c2 ?c)
-                            )
-                            (has_tile ?c2)
-                        )    
-                    )
-                    ; o a sx o dx o sotto ci deve essere un oro o una tile
-                    (forall (?c2 - cell)
-                        (and
-                            ; se sta a sx e ha una tile
-                            (imply 
-                                (and
-                                    (is_left ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_5 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_9 ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
-
-                            ; se sta a dx e ha una tile
-                            (imply
-                                (and
-                                    (is_right ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )  
-                            )
-                        
-                            ; se sta sotto e ha una tile
-                            (imply
-                                (and
-                                    (is_below ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                                (or
-                                    (has_tile_9 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-
-                            )
+                            (is_left ?c2 ?c)     
+                            (open_right ?c2)                     
                         )
+                        (and
+                            (is_right ?c2 ?c)
+                            (open_left ?c2)
+                        )
+                        (and
+                            (is_below ?c2 ?c)
+                            (open_above ?c2)
+                        )
+                        
+                        
+                        
                     )
+                        
                 )
+                    ; o a sx o dx o sotto ci deve essere un oro o una tile
+                  
             )
         )
 
         :effect (and
             ; c'e' la tile t su c
-            (at ?t ?c)
+            
             (has_tile ?c)
-            (has_tile_7 ?c)
+            (open_below ?c)
+            (open_left ?c)
+            (open_right ?c)
 
             ; t e' usata
             (used ?t)
 
             (first_tile_positioned)
 
-            (forall (?g - gold)
-                ; se l'oro e' su questa cella, allora l'oro ha una tile
-                (when 
-                    (at ?g ?c)
-                    (has_tile ?g)
-                )
-            )
+        
         )
     )
 
@@ -487,79 +315,43 @@
                 ; o non abbiamo ancora messo nessuna tile
                 (not (first_tile_positioned))
 
-                (and
+                
                     ; deve esserci almeno una cella c2 a dx o sopra con un oro o una tile
-                    (exists (?c2 - cell)
+                (exists (?c2 - cell)
+                    
+                    (or
+
                         (and
-                            (or
-                                (is_right ?c2 ?c)
-                                (is_above ?c2 ?c)
-                            )
-                            (has_tile ?c2)    
-                        )    
-                    )
-                    ; o a dx o sopra ci deve essere un oro o una tile
-                    (forall (?c2 - cell)
-                        (and
-                            ; se sta a dx e ha una tile
-                            (imply
-                                (and
-                                    (is_right ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )   
-                            )
-                                        
-                            ; se sta sopra e ha una tile
-                            (imply
-                                (and
-                                    (is_above ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                                (or
-                                    (has_tile_5 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )  
+                            (is_right ?c2 ?c)
+                            (open_left ?c2)
                         )
+                        (and
+                            (is_above ?c2 ?c)
+                            (open_below ?c2)
+                        )
+                        
                     )
+                    
                 )
+                    ; o a dx o sopra ci deve essere un oro o una tile
+                   
+                
             )
         )
 
         :effect (and
             ; c'e' la tile t su c
-            (at ?t ?c)
+            
             (has_tile ?c)
-            (has_tile_9 ?c)
+            (open_above ?c)
+            (open_right ?c)
 
             ; t e' usata
             (used ?t)
 
             (first_tile_positioned)
         
-            (forall (?g - gold)
-                ; se l'oro e' su questa cella, allora l'oro ha una tile
-                (when 
-                    (at ?g ?c)
-                    (has_tile ?g)
-                )
-            )
+            
         )
     )
 
@@ -586,79 +378,42 @@
                 ; o non abbiamo ancora messo nessuna tile
                 (not (first_tile_positioned))
 
-                (and
-                    ; deve esserci almeno una cella c2 a sx o sopra con un oro o una tile
-                    (exists (?c2 - cell)
-                        (and
-                            (or
-                                (is_left ?c2 ?c)
-                                (is_above ?c2 ?c)
-                            )
-                            (has_tile ?c2)
-                        )    
-                    )
-                    ; o a sx o sopra ci deve essere un oro o una tile
-                    (forall (?c2 - cell)
-                        (and
-                            ; se sta a sx e ha una tile
-                            (imply 
-                                (and
-                                    (is_left ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_5 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_9 ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
                 
-                            ; se sta sopra e ha una tile
-                            (imply
-                                (and
-                                    (is_above ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                                (or
-                                    (has_tile_5 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )  
+                    ; deve esserci almeno una cella c2 a sx o sopra con un oro o una tile
+                (exists (?c2 - cell)
+                    
+                    (or
+                        (and
+                            (is_left ?c2 ?c)
+                            (open_right ?c2)
                         )
+                        (and
+                            (is_above ?c2 ?c)
+                            (open_below ?c2)
+                        )
+                        
                     )
+                        
                 )
+                    ; o a sx o sopra ci deve essere un oro o una tile
+                    
+                
             )
         )
 
         :effect (and
             ; c'e' la tile t su c
-            (at ?t ?c)
+            
             (has_tile ?c)
-            (has_tile_a ?c)
+            (open_above ?c)
+            (open_left ?c)
 
             ; t e' usata
             (used ?t)
 
             (first_tile_positioned)
 
-            (forall (?g - gold)
-                ; se l'oro e' su questa cella, allora l'oro ha una tile
-                (when 
-                    (at ?g ?c)
-                    (has_tile ?g)
-                )
-            )
+            
         )
     )
 
@@ -685,98 +440,47 @@
                 ; o non abbiamo ancora messo nessuna tile
                 (not (first_tile_positioned))
             
-                (and
+               
                     ; deve esserci almeno una cella c2 a sx o dx o sopra con un oro o una tile
-                    (exists (?c2 - cell)
+                (exists (?c2 - cell)
+                    
+                    (or
                         (and
-                            (or
-                                (is_left ?c2 ?c)
-                                (is_right ?c2 ?c)
-                                (is_above ?c2 ?c)
-                            )
-                            (has_tile ?c2)
-                        )    
-                    )
-                    ; o a sx o dx o sopra ci deve essere un oro o una tile
-                    (forall (?c2 - cell)
-                        (and
-                            ; se sta a sx e ha una tile
-                            (imply 
-                                (and
-                                    (is_left ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_5 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_9 ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
-
-                            ; se sta a dx e ha una tile
-                            (imply
-                                (and
-                                    (is_right ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )   
-                            )
-                            
-                            ; se sta sopra e ha una tile
-                            (imply
-                                (and
-                                    (is_above ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                                (or
-                                    (has_tile_5 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )  
+                            (is_left ?c2 ?c)
+                            (open_right ?c2)
                         )
+                        (and
+                            (is_right ?c2 ?c)
+                            (open_left ?c2)
+                        )
+                        (and
+                            (is_above ?c2 ?c)
+                            (open_below ?c2)
+                        )
+                        
+                            
                     )
+                        
                 )
+                    ; o a sx o dx o sopra ci deve essere un oro o una tile
+                   
             )
         )
 
         :effect (and
             ; c'e' la tile t su c
-            (at ?t ?c)
+            
             (has_tile ?c)
-            (has_tile_b ?c)
+            (open_left ?c)
+            (open_right ?c)
+            (open_above ?c)
 
             ; t e' usata
             (used ?t)
 
             (first_tile_positioned)
         
-            (forall (?g - gold)
-                ; se l'oro e' su questa cella, allora l'oro ha una tile
-                (when 
-                    (at ?g ?c)
-                    (has_tile ?g)
-                )
-            )
+           
         )
     )
 
@@ -804,79 +508,42 @@
                 ; o non abbiamo ancora messo nessuna tile
                 (not (first_tile_positioned))
             
-                (and
+               
                     ; deve esserci almeno una cella sopra o sotto con un oro o una tile
-                    (exists (?c2 - cell)
+                (exists (?c2 - cell)
+                    
+                    (or
                         (and
-                            (or
-                                (is_above ?c2 ?c)
-                                (is_below ?c2 ?c)
-                            )
-                            (has_tile ?c2)
-                        )    
-                    )
-                    ; su ogni cella o sotto o sopra ci deve essere un oro o una tile appropriata
-                    (forall (?c2 - cell)
-                        (and
-                            ; se sta sotto e ha una tile
-                            (imply
-                                (and
-                                    (is_below ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                                (or
-                                    (has_tile_9 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
-                            
-                            ; se sta sopra e ha una tile
-                            (imply
-                                (and
-                                    (is_above ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                                (or
-                                    (has_tile_5 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )   
+                            (is_above ?c2 ?c)
+                            (open_below ?c2)
                         )
+                        (and
+                            (is_below ?c2 ?c)
+                            (open_above ?c2)
+                        )
+                        
+                        
                     )
+                        
                 )
+                    ; su ogni cella o sotto o sopra ci deve essere un oro o una tile appropriata
+                    
             )
         )
 
         :effect (and
             ; c'e' la tile t su c
-            (at ?t ?c)
+            
             (has_tile ?c)
-            (has_tile_c ?c)
+            (open_above ?c)
+            (open_below ?c)
 
             ; t e' usata
             (used ?t)
 
             (first_tile_positioned)
         
-            (forall (?g - gold)
-                ; se l'oro e' su questa cella, allora l'oro ha una tile
-                (when 
-                    (at ?g ?c)
-                    (has_tile ?g)
-                )
-            )
+            
         )
     )
 
@@ -903,98 +570,48 @@
                 ; o non abbiamo ancora messo nessuna tile
                 (not (first_tile_positioned))
             
-                (and
+                
                     ; deve esserci almeno una cella a dx o sopra o sotto con un oro o una tile
-                    (exists (?c2 - cell)
+                (exists (?c2 - cell)
+                    
+                    (or
                         (and
-                            (or
-                                (is_right ?c2 ?c)
-                                (is_above ?c2 ?c)
-                                (is_below ?c2 ?c)
-                            )
-                            (has_tile ?c2)
-                        )    
-                    )
-                    ; o a dx o sotto o sopra ci deve essere un oro o una tile
-                    (forall (?c2 - cell)
-                        (and
-                            ; se sta a dx e ha una tile
-                            (imply
-                                (and
-                                    (is_right ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )    
-                            )
-                        
-                            ; se sta sotto e ha una tile
-                            (imply
-                                (and
-                                    (is_below ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                                (or
-                                    (has_tile_9 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
-                            
-                            ; se sta sopra e ha una tile
-                            (imply
-                                (and
-                                    (is_above ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                                (or
-                                    (has_tile_5 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )  
+                            (is_right ?c2 ?c)
+                            (open_left ?c2)
                         )
+                        (and
+                            (is_above ?c2 ?c)
+                            (open_below ?c2)
+                        )
+                        (and
+                            (is_below ?c2 ?c)
+                            (open_above ?c2)
+                        )
+                        
+                        
                     )
-                )         
+                            
+                )
+                    ; o a dx o sotto o sopra ci deve essere un oro o una tile
+                    
+                       
             )
         )
 
         :effect (and
             ; c'e' la tile t su c
-            (at ?t ?c)
+            
             (has_tile ?c)
-            (has_tile_d ?c)
+            (open_below ?c)
+            (open_above ?c)
+            (open_right ?c)
 
             ; t e' usata
             (used ?t)
 
             (first_tile_positioned)
         
-            (forall (?g - gold)
-                ; se l'oro e' su questa cella, allora l'oro ha una tile
-                (when 
-                    (at ?g ?c)
-                    (has_tile ?g)
-                )
-            )
+           
         )
     )
 
@@ -1022,99 +639,49 @@
                 ; o non abbiamo ancora messo nessuna tile
                 (not (first_tile_positioned))
             
-                (and
-                    ; deve esserci almeno una cella a sx o sopra o sotto con un oro o una tile
-                    (exists (?c2 - cell)
+                
+                ; deve esserci almeno una cella a sx o sopra o sotto con un oro o una tile
+                (exists (?c2 - cell)
+                    
+                    (or
                         (and
-                            (or
-                                (is_left ?c2 ?c)
-                                (is_above ?c2 ?c)
-                                (is_below ?c2 ?c)
-                            )
-                            (has_tile ?c2)
-                        )    
+                            (is_left ?c2 ?c)
+                            (open_right ?c2)
+                        )
+                        (and
+                            (is_above ?c2 ?c)
+                            (open_below ?c2)
+                        )
+                        (and
+                            (is_below ?c2 ?c)
+                            (open_above ?c2)
+                        )
+                        
+                        
+                        
                     )
+                            
+                )
 
                     ; o a sx o dx o sotto o sopra ci deve essere un oro o una tile
-                    (forall (?c2 - cell)
-                        (and
-                            ; se sta a sx e ha una tile
-                            (imply 
-                                (and
-                                    (is_left ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_5 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_9 ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
-
-                            ; se sta sotto e ha una tile
-                            (imply
-                                (and
-                                    (is_below ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                                (or
-                                    (has_tile_9 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
-                            
-                            ; se sta sopra e ha una tile
-                            (imply
-                                (and
-                                    (is_above ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                                (or
-                                    (has_tile_5 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )  
-                        )
-                    )
-                )
+                   
             )
         )
 
         :effect (and
             ; c'e' la tile t su c
-            (at ?t ?c)
+            
             (has_tile ?c)
-            (has_tile_e ?c)
+            (open_left ?c)
+            (open_above ?c)
+            (open_below ?c)
 
             ; t e' usata
             (used ?t)
 
             (first_tile_positioned)
         
-            (forall (?g - gold)
-                ; se l'oro e' su questa cella, allora l'oro ha una tile
-                (when 
-                    (at ?g ?c)
-                    (has_tile ?g)
-                )
-            )
+            
         )
     )
 
@@ -1133,7 +700,7 @@
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ; t deve essere una tile_f
-            (tile_f ?t)
+            
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1146,117 +713,52 @@
                 ; o non abbiamo ancora messo nessuna tile
                 (not (first_tile_positioned))
             
-                (and
+                
                     ; deve esserci almeno una cella a sx o dx o sopra o sotto con un oro o una tile
-                    (exists (?c2 - cell)
+                (exists (?c2 - cell)
+                
+                    (or
                         (and
-                            (or
-                                (is_left ?c2 ?c)
-                                (is_right ?c2 ?c)
-                                (is_above ?c2 ?c)
-                                (is_below ?c2 ?c)
-                            )
-                            (has_tile ?c2)
-                        )    
-                    )
-                    ; o a sx o dx o sotto o sopra ci deve essere un oro o una tile
-                    (forall (?c2 - cell)
-                        (and
-                            ; se sta a sx e ha una tile
-                            (imply 
-                                (and
-                                    (is_left ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve avere una tile appropriata: { 3, 5, 7, 9, b, d, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_5 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_9 ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
-                        
-                            ; se sta a dx e ha una tile
-                            (imply
-                                (and
-                                    (is_right ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 3, 6, 7, a, b, e, f }
-                                (or
-                                    (has_tile_3 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )    
-                            )
-                        
-                            ; se sta sotto e ha una tile
-                            (imply
-                                (and
-                                    (is_below ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve una tile appropriata: { 9, a, b, c, d, e, f }
-                                (or
-                                    (has_tile_9 ?c2)
-                                    (has_tile_a ?c2)
-                                    (has_tile_b ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )
-                            
-                            ; se sta sopra e ha una tile
-                            (imply
-                                (and
-                                    (is_above ?c2 ?c)
-                                    (has_tile ?c2)
-                                )
-                                ; deve essere una tile appropriata: { 5, 6, 7, c, d, e, f }
-                                (or
-                                    (has_tile_5 ?c2)
-                                    (has_tile_6 ?c2)
-                                    (has_tile_7 ?c2)
-                                    (has_tile_c ?c2)
-                                    (has_tile_d ?c2)
-                                    (has_tile_e ?c2)
-                                    (has_tile_f ?c2)
-                                )
-                            )  
+                            (is_left ?c2 ?c)
+                            (open_right ?c2)
                         )
+                        (and
+                            (is_right ?c2 ?c)
+                            (open_left ?c2)
+                        )
+                        (and
+                            (is_above ?c2 ?c)
+                            (open_below ?c2)
+                        )
+                        (and
+                            (is_below ?c2 ?c)
+                            (open_above ?c2)
+                        )
+                        
+                        
                     )
+                            
                 )
+                ; o a sx o dx o sotto o sopra ci deve essere un oro o una tile
+                   
             )
         )
 
         :effect (and
             ; c'e' la tile t su c
-            (at ?t ?c)
+            
             (has_tile ?c)
-            (has_tile_f ?c)
+            (open_above ?c)
+            (open_below ?c)
+            (open_left ?c)
+            (open_right ?c)
 
             ; t e' usata
             (used ?t)
 
             (first_tile_positioned)
         
-            (forall (?g - gold)
-                ; se l'oro e' su questa cella, allora l'oro ha una tile
-                (when 
-                    (at ?g ?c)
-                    (has_tile ?g)
-                )
-            )
+        
         )
     )
 )
