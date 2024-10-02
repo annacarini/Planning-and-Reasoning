@@ -22,6 +22,8 @@
         ; tile c
         tc_1 tc_2 - tile_c
 
+        ; token
+        tk1 tk2 tk3 - token
     )
 
     (:init
@@ -64,7 +66,8 @@
         (is_right c11 c10)
         (is_right c12 c11)
 
-        ; posizioni degli ori
+        ; posizioni degli argenti
+        (has_silver c6)
         
 
         (= (total-cost) 0)
@@ -79,6 +82,11 @@
             (has_tile c9)
             (has_tile c11)
         )
+    )
+
+
+    (:metric
+        minimize (total-cost)
     )
 )
 
