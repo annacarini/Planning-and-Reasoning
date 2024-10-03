@@ -68,7 +68,6 @@
 
         ; posizioni degli argenti
         (has_silver c6)
-        
 
         (= (total-cost) 0)
     )
@@ -77,16 +76,22 @@
         ; l'obiettivo e' collegare tutti gli ori tra loro, per come sono costituite le azioni basta che su ogni cella
         ; con un oro ci sia posizionata una tile
         (and
+            ; controllo ori
             (has_tile c1)
             (has_tile c4)
             (has_tile c9)
             (has_tile c11)
+
+            ; controllo argenti
+            (or
+                (has_tile c6)
+                (not (taken_silver_at c6))
+            )
+
         )
     )
 
 
-    (:metric
-        minimize (total-cost)
-    )
+    (:metric minimize (total-cost) )
 )
 
