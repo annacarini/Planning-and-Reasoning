@@ -11,9 +11,7 @@
     (:predicates
         ; per creare la griglia
         (is_above ?c1 - cell ?c2 - cell)
-        (is_below ?c1 - cell ?c2 - cell)
         (is_right ?c1 - cell ?c2 - cell)
-        (is_left ?c1 - cell ?c2 - cell)
 
         (has_silver ?c - cell)
 
@@ -22,7 +20,7 @@
         ; tutte le celle partono "ok". poi se prendi un argento da una cella, viene messa a "non ok" fino
         ; a che non ci metti una tile, a meno che non ci fosse gia' la tile
         (cell_is_ok ?c - cell)
-        
+
 
         ; per indicare quali tile sono gia' state usate
         (used ?t - tile)
@@ -81,7 +79,7 @@
                     
                     (or
                         (and
-                            (is_left ?c2 ?c)
+                            (is_right ?c ?c2) ; equivalente a (is_left ?c2 ?c)
                             (open_right ?c2)
                         )
                         (and
@@ -153,7 +151,7 @@
                     
                     (or
                         (and
-                            (is_left ?c2 ?c)
+                            (is_right ?c ?c2)
                             (open_right ?c2)
                         )
                         (and
@@ -231,7 +229,7 @@
                             (open_left ?c2)  
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -301,7 +299,7 @@
                             (open_left ?c2)  
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -370,11 +368,11 @@
                 
                     (or
                         (and
-                            (is_left ?c2 ?c)                     
+                            (is_right ?c ?c2)                     
                             (open_right ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -437,11 +435,11 @@
                 
                     (or
                         (and
-                            (is_left ?c2 ?c)                     
+                            (is_right ?c ?c2)                     
                             (open_right ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -508,7 +506,7 @@
                     
                     (or
                         (and
-                            (is_left ?c2 ?c)     
+                            (is_right ?c ?c2)     
                             (open_right ?c2)                     
                         )
                         (and
@@ -516,7 +514,7 @@
                             (open_left ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -583,7 +581,7 @@
                     
                     (or
                         (and
-                            (is_left ?c2 ?c)     
+                            (is_right ?c ?c2)     
                             (open_right ?c2)                     
                         )
                         (and
@@ -591,7 +589,7 @@
                             (open_left ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -803,7 +801,7 @@
                     
                     (or
                         (and
-                            (is_left ?c2 ?c)
+                            (is_right ?c ?c2)
                             (open_right ?c2)
                         )
                         (and
@@ -870,7 +868,7 @@
                     
                     (or
                         (and
-                            (is_left ?c2 ?c)
+                            (is_right ?c ?c2)
                             (open_right ?c2)
                         )
                         (and
@@ -942,7 +940,7 @@
                     
                     (or
                         (and
-                            (is_left ?c2 ?c)
+                            (is_right ?c ?c2)
                             (open_right ?c2)
                         )
                         (and
@@ -1014,7 +1012,7 @@
                     
                     (or
                         (and
-                            (is_left ?c2 ?c)
+                            (is_right ?c ?c2)
                             (open_right ?c2)
                         )
                         (and
@@ -1095,7 +1093,7 @@
                             (open_below ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -1162,7 +1160,7 @@
                             (open_below ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -1237,7 +1235,7 @@
                             (open_below ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -1311,7 +1309,7 @@
                             (open_below ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -1383,7 +1381,7 @@
                     
                     (or
                         (and
-                            (is_left ?c2 ?c)
+                            (is_right ?c ?c2)
                             (open_right ?c2)
                         )
                         (and
@@ -1391,7 +1389,7 @@
                             (open_below ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -1458,7 +1456,7 @@
                     
                     (or
                         (and
-                            (is_left ?c2 ?c)
+                            (is_right ?c ?c2)
                             (open_right ?c2)
                         )
                         (and
@@ -1466,7 +1464,7 @@
                             (open_below ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -1541,7 +1539,7 @@
                 
                     (or
                         (and
-                            (is_left ?c2 ?c)
+                            (is_right ?c ?c2)
                             (open_right ?c2)
                         )
                         (and
@@ -1553,7 +1551,7 @@
                             (open_below ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         
@@ -1620,7 +1618,7 @@
                 
                     (or
                         (and
-                            (is_left ?c2 ?c)
+                            (is_right ?c ?c2)
                             (open_right ?c2)
                         )
                         (and
@@ -1632,7 +1630,7 @@
                             (open_below ?c2)
                         )
                         (and
-                            (is_below ?c2 ?c)
+                            (is_above ?c ?c2)
                             (open_above ?c2)
                         )
                         

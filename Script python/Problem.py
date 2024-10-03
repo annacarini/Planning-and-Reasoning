@@ -115,20 +115,21 @@ class Problem:
         isBelow = ""
         for i in range(self.cols, len(self.cells)):
             isBelow += indent + "(is_below " + self.cells[i] + " " + self.cells[i - self.cols] + ")\n"
-
+    
         # is_left:
         isLeft = ""
         for i in range(0, len(self.cells)):
             if ((i+1) % self.cols != 0):            # se non e' l'ultima cella di una riga
                 isLeft += indent + "(is_left " + self.cells[i] + " " + self.cells[i + 1] + ")\n"
-
+        
         # is_right:
         isRight = ""
         for i in range(0, len(self.cells)):
             if (i % self.cols != 0):            # se non e' la prima cella di una riga
                 isRight += indent + "(is_right " + self.cells[i] + " " + self.cells[i - 1] + ")\n"
 
-        return isAbove + "\n" + isBelow + "\n" + isLeft + "\n" + isRight
+        #return isAbove + "\n" + isBelow + "\n" + isLeft + "\n" + isRight
+        return isAbove + "\n" + isRight
 
 
     def cellAtPosition(self, r, c):
