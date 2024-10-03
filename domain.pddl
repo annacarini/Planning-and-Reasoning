@@ -16,17 +16,13 @@
         (is_left ?c1 - cell ?c2 - cell)
 
         (has_silver ?c - cell)
-        (taken_silver_at ?c - cell)
 
         ; una cella e' ok se non ha mai avuto un argento, o aveva un argento che non e' stato preso,
         ; o aveva un argento che e' stato preso ma sulla cella e' stata messa una tile.
         ; tutte le celle partono "ok". poi se prendi un argento da una cella, viene messa a "non ok" fino
         ; a che non ci metti una tile, a meno che non ci fosse gia' la tile
         (cell_is_ok ?c - cell)
-
-        ;(correctly_taken_silver_at ?c - cell)
-
-        ;(at ?s - object ?c - cell)
+        
 
         ; per indicare quali tile sono gia' state usate
         (used ?t - tile)
@@ -1684,7 +1680,6 @@
         :precondition (and
             (not (has_tile ?c))
             (has_silver ?c)
-            (not (taken_silver_at ?c))
             (not (has_token ?tk1))
             (not (has_token ?tk2))
             (not (has_token ?tk3))
@@ -1692,7 +1687,7 @@
 
         :effect (and
             ; hai preso l'argento e i token
-            (taken_silver_at ?c)
+            (not (has_silver ?c))
             (has_token ?tk1)
             (has_token ?tk2)
             (has_token ?tk3)
@@ -1710,7 +1705,6 @@
         :precondition (and
             (has_silver ?c)
             (has_tile ?c)
-            (not (taken_silver_at ?c))
             (not (has_token ?tk1))
             (not (has_token ?tk2))
             (not (has_token ?tk3))
@@ -1718,7 +1712,7 @@
 
         :effect (and
             ; hai preso l'argento e i token
-            (taken_silver_at ?c)
+            (not (has_silver ?c))
             (has_token ?tk1)
             (has_token ?tk2)
             (has_token ?tk3)

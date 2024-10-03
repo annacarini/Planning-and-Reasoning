@@ -185,8 +185,12 @@ class Problem:
             f.write("\t\t" + self.createTileObjectsString(self.tilesF, "f") + "\n")
 
 
-        # token?
-        # ...
+        # token, 3 per ogni argento
+        tokenToWrite = "\t\t"
+        for i in range(0, len(self.silvers)*3):
+            tokenToWrite += "tk" + str(i+1) + " "
+        tokenToWrite += "- token\n"
+        f.write(tokenToWrite)
 
 
         f.write("\t)\n")
@@ -203,9 +207,17 @@ class Problem:
 
         # has_silver
         f.write("\n")
+        toWrite = ""
         for silv in self.silvers:
-            toWrite = "\t\t(has_silver " + self.cellAtPosition(silv.row, silv.col) + ")\n"
-            f.write(toWrite)
+            toWrite += "\t\t(has_silver " + self.cellAtPosition(silv.row, silv.col) + ")\n"
+        f.write(toWrite)
+
+        # cell_is_ok
+        f.write("\n")
+        toWrite = ""
+        for silv in self.silvers:
+            toWrite += "\t\t(cell_is_ok " + self.cellAtPosition(silv.row, silv.col) + ")\n"
+        f.write(toWrite)        
 
         # costo iniziale
         f.write("\n\t\t(= (total-cost) 0)\n")
@@ -218,10 +230,19 @@ class Problem:
 
         ########### GOAL ###########
         f.write("\t(:goal\n\t\t(and\n")
-        
+
+        # controllo ori
+        toWrite = ""
         for gold in self.golds:
-            toWrite = "\t\t\t(has_tile " + self.cellAtPosition(gold.row, gold.col) + ")\n"
-            f.write(toWrite)
+            toWrite += "\t\t\t(has_tile " + self.cellAtPosition(gold.row, gold.col) + ")\n"
+        f.write(toWrite)
+
+        # controllo argenti
+        f.write("\n")
+        toWrite = ""
+        for silv in self.silvers:
+            toWrite += "\t\t\t(cell_is_ok " + self.cellAtPosition(silv.row, silv.col) + ")\n"
+        f.write(toWrite)  
 
         f.write("\t\t)\n\t)\n")
         ########### FINE GOAL ###########
@@ -232,8 +253,8 @@ class Problem:
         ########### FINE METRIC ###########
 
 
-
         # chiudi file
+        f.write(")")
         f.close()
         
 
