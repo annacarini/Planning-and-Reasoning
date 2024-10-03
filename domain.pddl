@@ -18,6 +18,14 @@
         (has_silver ?c - cell)
         (taken_silver_at ?c - cell)
 
+        ; una cella e' ok se non ha mai avuto un argento, o aveva un argento che non e' stato preso,
+        ; o aveva un argento che e' stato preso ma sulla cella e' stata messa una tile.
+        ; tutte le celle partono "ok". poi se prendi un argento da una cella, viene messa a "non ok" fino
+        ; a che non ci metti una tile, a meno che non ci fosse gia' la tile
+        (cell_is_ok ?c - cell)
+
+        ;(correctly_taken_silver_at ?c - cell)
+
         ;(at ?s - object ?c - cell)
 
         ; per indicare quali tile sono gia' state usate
@@ -104,6 +112,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (increase (total-cost) 30)
 
             ; segna che abbiamo messo (almeno) una tile
@@ -172,9 +183,11 @@
 
             (not (has_token ?tk))
             
-
             ; t e' usata
             (used ?t)
+
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
 
             (increase (total-cost) 0)
 
@@ -246,6 +259,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 10)
@@ -315,6 +331,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 0)
@@ -381,6 +400,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 10)
@@ -446,6 +468,9 @@
 
             ; t e' usata
             (used ?t)
+
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
 
             (first_tile_positioned)
 
@@ -519,6 +544,9 @@
 
             ; t e' usata
             (used ?t)
+
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
 
             (first_tile_positioned)
 
@@ -594,6 +622,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 0)
@@ -661,6 +692,9 @@
 
             ; t e' usata
             (used ?t)
+
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
 
             (first_tile_positioned)
 
@@ -731,6 +765,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 0)
@@ -797,6 +834,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 10)
@@ -862,6 +902,9 @@
 
             ; t e' usata
             (used ?t)
+
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
 
             (first_tile_positioned)
 
@@ -935,6 +978,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 40)
@@ -1006,6 +1052,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 0)
@@ -1073,6 +1122,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 30)
@@ -1138,6 +1190,9 @@
 
             ; t e' usata
             (used ?t)
+
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
 
             (first_tile_positioned)
 
@@ -1211,6 +1266,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 40)
@@ -1283,6 +1341,9 @@
 
             ; t e' usata
             (used ?t)
+
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
 
             (first_tile_positioned)
 
@@ -1360,6 +1421,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 40)
@@ -1433,6 +1497,9 @@
 
             ; t e' usata
             (used ?t)
+
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
 
             (first_tile_positioned)
 
@@ -1515,6 +1582,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 75)
@@ -1593,6 +1663,9 @@
             ; t e' usata
             (used ?t)
 
+            ; segna che la cella e' ok
+            (cell_is_ok ?c)
+
             (first_tile_positioned)
 
             (increase (total-cost) 0)
@@ -1604,11 +1677,39 @@
 
     ;############################################### ALTRO ###############################################
 
-    (:action take_silver
+
+    (:action take_silver_no_tile
+        :parameters (?c - cell ?tk1 ?tk2 ?tk3 - token)
+        
+        :precondition (and
+            (not (has_tile ?c))
+            (has_silver ?c)
+            (not (taken_silver_at ?c))
+            (not (has_token ?tk1))
+            (not (has_token ?tk2))
+            (not (has_token ?tk3))
+        )
+
+        :effect (and
+            ; hai preso l'argento e i token
+            (taken_silver_at ?c)
+            (has_token ?tk1)
+            (has_token ?tk2)
+            (has_token ?tk3)
+
+            ; visto che non c'e' gia' una tile su questa cella, metti che la cella non e' ok
+            (not (cell_is_ok ?c))
+
+            (increase (total-cost) 0)    
+        )
+    )
+
+    (:action take_silver_tile_already_there
         :parameters (?c - cell ?tk1 ?tk2 ?tk3 - token)
         
         :precondition (and
             (has_silver ?c)
+            (has_tile ?c)
             (not (taken_silver_at ?c))
             (not (has_token ?tk1))
             (not (has_token ?tk2))
@@ -1625,5 +1726,4 @@
             (increase (total-cost) 0)    
         )
     )
-
 )

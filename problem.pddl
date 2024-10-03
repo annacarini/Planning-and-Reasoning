@@ -69,6 +69,9 @@
         ; posizioni degli argenti
         (has_silver c6)
 
+        ; per controllare gli argenti
+        (cell_is_ok c6)
+
         (= (total-cost) 0)
     )
 
@@ -83,10 +86,7 @@
             (has_tile c11)
 
             ; controllo argenti
-            (or
-                (has_tile c6)
-                (not (taken_silver_at c6))
-            )
+            (cell_is_ok c6)
 
         )
     )
