@@ -22,6 +22,8 @@
         ; tile c
         tc_1 tc_2 - tile_c
 
+        tb_1 - tile_b
+
         ; token
         tk1 tk2 tk3 - token
     )
@@ -49,11 +51,11 @@
 
         ; posizioni degli argenti
         (has_silver c6)
-        (has_silver c7)
+        ;(has_silver c7)
 
         ; per controllare gli argenti
         (cell_is_ok c6)
-        (cell_is_ok c7)
+        ;(cell_is_ok c7)
 
         (= (total-cost) 0)
     )
@@ -70,7 +72,7 @@
 
             ; controllo argenti
             (cell_is_ok c6)
-            (cell_is_ok c7)
+            ;(cell_is_ok c7)
 
         )
     )

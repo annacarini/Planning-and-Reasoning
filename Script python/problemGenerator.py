@@ -88,8 +88,8 @@ prob.addSilver(1,0)
 prob.addSilver(2,5)
 
 # genera file PDDL
-prob.generateProblemFile()
-
+#prob.generateProblemFile()
+prob.generateInputForDrawing()
 
 
 

@@ -8,6 +8,8 @@ class PositionedObject:
     def __init__(self, row, col):
         self.row = row
         self.col = col
+    def __str__(self):
+        return f"({self.row},{self.col})"
 
 
 class Problem:
@@ -256,6 +258,26 @@ class Problem:
 
         # chiudi file
         f.write(")")
+        f.close()
+        
+
+    def generateInputForDrawing(self):
+
+        filename = self.problemName + ".txt"
+        f = open(filename, "w")
+        
+        f.write(f"{self.rows},{self.cols}\n")
+
+        golds_string = ""
+        for g in self.golds:
+            golds_string += str(g) + ";"
+        f.write(golds_string[:-1] + "\n")
+
+        silvers_string = ""
+        for s in self.silvers:
+            silvers_string += str(s) + ";"
+        f.write(silvers_string[:-1] + "\n")
+
         f.close()
         
 
