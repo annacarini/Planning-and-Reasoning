@@ -157,7 +157,15 @@ def main():
 
 
     # Salva immagine
-    img.save("output.png", "PNG")
+    problem_file_name_no_extension = problem_file_name
+    index = problem_file_name.rfind(".")
+    if index > -1:
+        prob_file_name_no_extension = problem_file_name[:index]
+    plan_file_name_no_extension = plan_file_name
+    index = plan_file_name.rfind(".")
+    if index > -1:
+        plan_file_name_no_extension = plan_file_name[:index]
+    img.save("output_" + prob_file_name_no_extension + "_" + plan_file_name_no_extension + ".png", "PNG")
      
     # Mostra immagine
     img.show()
