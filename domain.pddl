@@ -19,7 +19,7 @@
         ; o aveva un argento che e' stato preso ma sulla cella e' stata messa una tile.
         ; tutte le celle partono "ok". poi se prendi un argento da una cella, viene messa a "non ok" fino
         ; a che non ci metti una tile, a meno che non ci fosse gia' la tile
-        (cell_is_ok ?c - cell)
+        
 
 
         ; per indicare quali tile sono gia' state usate
@@ -107,7 +107,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (increase (total-cost) 30)
 
@@ -181,9 +181,9 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
-            (increase (total-cost) 0)
+             
 
             ; segna che abbiamo messo (almeno) una tile
             (first_tile_positioned)
@@ -254,7 +254,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
@@ -326,11 +326,11 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
-            (increase (total-cost) 0)
+             
 
         
         )
@@ -395,7 +395,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
@@ -464,11 +464,11 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
-            (increase (total-cost) 0)
+             
 
             
         )
@@ -540,7 +540,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
@@ -617,11 +617,11 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
-            (increase (total-cost) 0)
+             
 
         
         )
@@ -688,7 +688,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
@@ -760,11 +760,11 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
-            (increase (total-cost) 0)
+             
         
             
         )
@@ -829,7 +829,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
@@ -898,11 +898,11 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
-            (increase (total-cost) 0)
+             
 
             
         )
@@ -973,7 +973,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
@@ -1047,11 +1047,11 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
-            (increase (total-cost) 0)
+             
         
            
         )
@@ -1117,7 +1117,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
@@ -1186,11 +1186,11 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
-            (increase (total-cost) 0)
+             
         
             
         )
@@ -1261,7 +1261,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
@@ -1337,11 +1337,11 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
-            (increase (total-cost) 0)
+             
         
            
         )
@@ -1416,7 +1416,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
@@ -1493,11 +1493,11 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
-            (increase (total-cost) 0)
+             
         
             
         )
@@ -1577,7 +1577,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
@@ -1658,11 +1658,11 @@
             (used ?t)
 
             ; segna che la cella e' ok
-            (cell_is_ok ?c)
+              
 
             (first_tile_positioned)
 
-            (increase (total-cost) 0)
+             
         
         
         )
@@ -1672,11 +1672,10 @@
     ;############################################### ALTRO ###############################################
 
 
-    (:action take_silver_no_tile
+    (:action take_silver
         :parameters (?c - cell ?tk1 ?tk2 ?tk3 - token)
         
         :precondition (and
-            (not (has_tile ?c))
             (has_silver ?c)
             (not (has_token ?tk1))
             (not (has_token ?tk2))
@@ -1690,32 +1689,8 @@
             (has_token ?tk2)
             (has_token ?tk3)
 
-            ; visto che non c'e' gia' una tile su questa cella, metti che la cella non e' ok
-            (not (cell_is_ok ?c))
-
-            (increase (total-cost) 0)    
+                 
         )
     )
 
-    (:action take_silver_tile_already_there
-        :parameters (?c - cell ?tk1 ?tk2 ?tk3 - token)
-        
-        :precondition (and
-            (has_silver ?c)
-            (has_tile ?c)
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-        )
-
-        :effect (and
-            ; hai preso l'argento e i token
-            (not (has_silver ?c))
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
-
-            (increase (total-cost) 0)    
-        )
-    )
 )
