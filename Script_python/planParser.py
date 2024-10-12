@@ -194,7 +194,7 @@ def main():
 
 
     # Salva immagine
-    img.save("output_" + problem + "_" + PLAN_NAME_NO_EXT + ".png", "PNG")
+    img.save(os.path.join(PROBLEMS_DIR, problem,"output_" + problem + "_" + PLAN_NAME_NO_EXT + ".png"), "PNG")
      
     # Mostra immagine
     img.show()
