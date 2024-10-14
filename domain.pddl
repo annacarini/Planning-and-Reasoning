@@ -59,7 +59,7 @@
             ; deve essere di tipo { 3, 6, 7, a, b, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -129,7 +129,7 @@
             ; deve essere di tipo { 3, 6, 7, a, b, e, f }
                          
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -206,7 +206,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
             
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -274,7 +274,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -349,7 +349,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -414,7 +414,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -488,7 +488,7 @@
             ; { 3, 5, 7, 9, b, d, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
             
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -561,7 +561,7 @@
             ; { 3, 5, 7, 9, b, d, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -640,7 +640,7 @@
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -708,7 +708,7 @@
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -783,7 +783,7 @@
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -848,7 +848,7 @@
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -922,7 +922,7 @@
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -992,7 +992,7 @@
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1071,7 +1071,7 @@
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1136,7 +1136,7 @@
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -1209,7 +1209,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1281,7 +1281,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -1362,7 +1362,7 @@
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1435,7 +1435,7 @@
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1520,7 +1520,7 @@
             ; t deve essere una tile_f
             
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1597,7 +1597,7 @@
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
