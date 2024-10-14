@@ -112,25 +112,13 @@ class Problem:
         isAbove = ""
         for i in range(0, len(self.cells) - self.cols):
             isAbove += indent + "(is_above " + self.cells[i] + " " + self.cells[i + self.cols] + ")\n"
-
-        # is_below:
-        isBelow = ""
-        for i in range(self.cols, len(self.cells)):
-            isBelow += indent + "(is_below " + self.cells[i] + " " + self.cells[i - self.cols] + ")\n"
-    
-        # is_left:
-        isLeft = ""
-        for i in range(0, len(self.cells)):
-            if ((i+1) % self.cols != 0):            # se non e' l'ultima cella di una riga
-                isLeft += indent + "(is_left " + self.cells[i] + " " + self.cells[i + 1] + ")\n"
-        
+     
         # is_right:
         isRight = ""
         for i in range(0, len(self.cells)):
             if (i % self.cols != 0):            # se non e' la prima cella di una riga
                 isRight += indent + "(is_right " + self.cells[i] + " " + self.cells[i - 1] + ")\n"
 
-        #return isAbove + "\n" + isBelow + "\n" + isLeft + "\n" + isRight
         return isAbove + "\n" + isRight
 
 
@@ -143,7 +131,7 @@ class Problem:
     def generateProblemFile(self):
 
         # crea file
-        filename = self.problemName + ".pddl"     # datetime per dare un nome diverso a ogni problema
+        filename = self.problemName + ".pddl"
         f = open(filename, "w")
 
         # nome problema e dominio
@@ -215,13 +203,15 @@ class Problem:
             toWrite += "\t\t(has_silver " + self.cellAtPosition(silv.row, silv.col) + ")\n"
         f.write(toWrite)
 
+        '''
         # cell_is_ok
         f.write("\n")
         toWrite = ""
         for silv in self.silvers:
             toWrite += "\t\t(cell_is_ok " + self.cellAtPosition(silv.row, silv.col) + ")\n"
         f.write(toWrite)        
-
+        '''
+        
         # costo iniziale
         f.write("\n\t\t(= (total-cost) 0)\n")
 
@@ -244,7 +234,11 @@ class Problem:
         f.write("\n")
         toWrite = ""
         for silv in self.silvers:
-            toWrite += "\t\t\t(cell_is_ok " + self.cellAtPosition(silv.row, silv.col) + ")\n"
+            cell = self.cellAtPosition(silv.row, silv.col)
+            toWrite += "\t\t\t(or\n"
+            toWrite += "\t\t\t\t(has_silver " + cell + ")\n"
+            toWrite += "\t\t\t\t(has_tile " + cell + ")\n"
+            toWrite += "\t\t\t)\n"
         f.write(toWrite)  
 
         f.write("\t\t)\n\t)\n")

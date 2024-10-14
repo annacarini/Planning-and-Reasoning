@@ -26,7 +26,7 @@ prob.generateProblemFile()
 
 
 ################## ISTANZA 1 ##################
-
+'''
 prob = Problem("problem1", 10, 7)
 
 # tiles disponibili
@@ -55,10 +55,10 @@ prob.addSilver(7,5)
 
 # genera file PDDL
 prob.generateProblemFile()
-prob.generateInputForDrawing()
+#prob.generateInputForDrawing()
 
 
-
+'''
 
 ################## ISTANZA 2 ##################
 
@@ -91,7 +91,7 @@ prob.addSilver(11,2)
 
 # genera file PDDL
 prob.generateProblemFile()
-prob.generateInputForDrawing()
+#prob.generateInputForDrawing()
 
 
 
@@ -127,7 +127,7 @@ prob.addSilver(9,7)
 
 # genera file PDDL
 prob.generateProblemFile()
-prob.generateInputForDrawing()
+#prob.generateInputForDrawing()
 
 
 ################## ISTANZA 4 ##################
@@ -160,7 +160,7 @@ prob.addSilver(5,8)
 
 # genera file PDDL
 prob.generateProblemFile()
-prob.generateInputForDrawing()
+#prob.generateInputForDrawing()
 
 
 ################## ISTANZA 5 ##################
@@ -194,7 +194,7 @@ prob.addSilver(10,1)
 
 # genera file PDDL
 prob.generateProblemFile()
-prob.generateInputForDrawing()
+#prob.generateInputForDrawing()
 
 
 

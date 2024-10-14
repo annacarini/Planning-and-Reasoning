@@ -242,12 +242,6 @@
 		(has_silver c101)
 		(has_silver c116)
 
-		(cell_is_ok c18)
-		(cell_is_ok c43)
-		(cell_is_ok c82)
-		(cell_is_ok c101)
-		(cell_is_ok c116)
-
 		(= (total-cost) 0)
 	)
 	(:goal
@@ -257,11 +251,26 @@
 			(has_tile c108)
 			(has_tile c111)
 
-			(cell_is_ok c18)
-			(cell_is_ok c43)
-			(cell_is_ok c82)
-			(cell_is_ok c101)
-			(cell_is_ok c116)
+			(or
+				(has_silver c18)
+				(has_tile c18)
+			)
+			(or
+				(has_silver c43)
+				(has_tile c43)
+			)
+			(or
+				(has_silver c82)
+				(has_tile c82)
+			)
+			(or
+				(has_silver c101)
+				(has_tile c101)
+			)
+			(or
+				(has_silver c116)
+				(has_tile c116)
+			)
 		)
 	)
 	(:metric

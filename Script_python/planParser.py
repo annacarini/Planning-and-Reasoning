@@ -64,7 +64,8 @@ def main():
     # args e' tipo: ["prob.txt", "sas_plan"]
 
     problem = ""
-    plan_file_name = ""
+    plan_file_name = ""     # serve per il nome dell'immagine che salviamo
+    plan_file_path = ""
 
     if len(args) < 1:
         raise Exception("Problem file missing")
@@ -72,12 +73,12 @@ def main():
     problem = args[0]
 
     if len(args) < 2:
-        plan_file_name = os.path.join(PROBLEMS_DIR, problem,find_best_plan(problem))
+        plan_file_name = find_best_plan(problem)
         
-
     else:
         plan_file_name = args[1]
 
+    plan_file_path = os.path.join(PROBLEMS_DIR, problem, plan_file_name)
 
     
     # Apri file che descrive la griglia e gli ori
@@ -136,7 +137,7 @@ def main():
 
 
     # Apri file con il plan per sapere dove mettere le tile
-    plan_file = open(plan_file_name, 'r')
+    plan_file = open(plan_file_path, 'r')
     lines = plan_file.readlines()
     plan_file.close()
 
@@ -194,7 +195,7 @@ def main():
 
 
     # Salva immagine
-    img.save(os.path.join(PROBLEMS_DIR, problem,"output_" + problem + "_" + PLAN_NAME_NO_EXT + ".png"), "PNG")
+    img.save(os.path.join(PROBLEMS_DIR, problem, problem + "_" + plan_file_name.replace(".", "") + ".png"), "PNG")
      
     # Mostra immagine
     img.show()

@@ -154,19 +154,19 @@
 			(has_tile c52)
 			(has_tile c49)
 
-			(or 
+			(or
 				(has_silver c33)
 				(has_tile c33)
 			)
-			(or 
+			(or
 				(has_silver c31)
 				(has_tile c31)
 			)
-			(or 
+			(or
 				(has_silver c43)
 				(has_tile c43)
 			)
-			(or 
+			(or
 				(has_silver c55)
 				(has_tile c55)
 			)

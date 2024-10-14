@@ -9,5 +9,9 @@ for %%x in (sas_plan.*) do (
 )
 echo highest version: sas_plan.%max%
 
-python ../planParser.py problem2.txt sas_plan.%max%
 
+:python planParser.py problem1 sas_plan.%max%
+
+python Script_python/planParser.py problem1
+
+:pause
