@@ -1,5 +1,5 @@
 (define (domain progetto)
-    (:requirements :strips :typing :disjunctive-preconditions :negative-preconditions :action-costs)
+    (:requirements :strips :typing :disjunctive-preconditions :negative-preconditions :action-costs :equality)
 
     (:types
         cell - object
@@ -121,7 +121,7 @@
     ; place has token 
 
     (:action place_tile_3_with_token
-        :parameters (?c - cell ?t - tile_3 ?tk)
+        :parameters (?c - cell ?t - tile_3 ?tk - token)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a dx o a sx ci deve essere o un oro o una tile,
@@ -1678,6 +1678,9 @@
         :precondition (and
             (not (has_tile ?c))
             (has_silver ?c)
+            (not (= ?tk1 ?tk2))
+            (not (= ?tk3 ?tk2))
+            (not (= ?tk3 ?tk1))
             (not (has_token ?tk1))
             (not (has_token ?tk2))
             (not (has_token ?tk3))
@@ -1703,6 +1706,9 @@
         :precondition (and
             (has_silver ?c)
             (has_tile ?c)
+            (not (= ?tk1 ?tk2))
+            (not (= ?tk3 ?tk2))
+            (not (= ?tk3 ?tk1))
             (not (has_token ?tk1))
             (not (has_token ?tk2))
             (not (has_token ?tk3))
