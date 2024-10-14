@@ -1,5 +1,5 @@
 (define (domain progetto)
-    (:requirements :strips :typing :disjunctive-preconditions :negative-preconditions :action-costs)
+    (:requirements :strips :typing :disjunctive-preconditions :negative-preconditions :action-costs :equality)
 
     (:types
         cell - object
@@ -59,7 +59,7 @@
             ; deve essere di tipo { 3, 6, 7, a, b, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -121,7 +121,7 @@
     ; place has token 
 
     (:action place_tile_3_with_token
-        :parameters (?c - cell ?t - tile_3 ?tk)
+        :parameters (?c - cell ?t - tile_3 ?tk - token)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a dx o a sx ci deve essere o un oro o una tile,
@@ -129,7 +129,7 @@
             ; deve essere di tipo { 3, 6, 7, a, b, e, f }
                          
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -206,7 +206,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
             
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -274,7 +274,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -290,7 +290,7 @@
                 (not (first_tile_positioned))
 
                
-                    ; deve esserci almeno una cella c2 a dx o sotto con un oro o una tile
+                ; deve esserci almeno una cella c2 a dx o sotto con un oro o una tile
                 (exists (?c2 - cell)
                     
                     (or
@@ -349,7 +349,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -414,7 +414,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -488,7 +488,7 @@
             ; { 3, 5, 7, 9, b, d, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
             
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -561,7 +561,7 @@
             ; { 3, 5, 7, 9, b, d, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -640,7 +640,7 @@
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -708,7 +708,7 @@
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -783,7 +783,7 @@
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -848,7 +848,7 @@
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -922,7 +922,7 @@
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -992,7 +992,7 @@
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1071,7 +1071,7 @@
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1136,7 +1136,7 @@
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -1209,7 +1209,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1281,7 +1281,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -1362,7 +1362,7 @@
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1435,7 +1435,7 @@
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1520,7 +1520,7 @@
             ; t deve essere una tile_f
             
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1597,7 +1597,7 @@
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
             ;(not (silvers_validated))
-            ;(not (has_silver ?c))
+            (not (has_silver ?c))
 
             (has_token ?tk)
 
@@ -1677,6 +1677,9 @@
         
         :precondition (and
             (has_silver ?c)
+            (not (= ?tk1 ?tk2))
+            (not (= ?tk3 ?tk2))
+            (not (= ?tk3 ?tk1))
             (not (has_token ?tk1))
             (not (has_token ?tk2))
             (not (has_token ?tk3))
