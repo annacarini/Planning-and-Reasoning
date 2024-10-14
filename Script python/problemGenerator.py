@@ -22,7 +22,7 @@ prob.addSilver(1,2)
 
 # genera file PDDL
 prob.generateProblemFile()
-'''
+
 
 
 ################## ISTANZA 1 ##################
@@ -196,7 +196,34 @@ prob.addSilver(10,1)
 prob.generateProblemFile()
 prob.generateInputForDrawing()
 
+'''
 
+################## ISTANZA 7 ##################
 
+prob = Problem("problem7", 5, 5)
 
+# tiles disponibili
+prob.setTiles3(4)
+#prob.setTiles5(0)
+prob.setTiles6(1)
+#prob.setTiles7(2)
+prob.setTiles9(1)
+prob.setTilesA(1)
+prob.setTilesB(1)
+prob.setTilesC(1)
+#prob.setTilesD(4)
+#prob.setTilesE(3)
+prob.setTilesF(1)
+
+#ori
+prob.addGold(1,1)
+prob.addGold(3,3)
+
+# argenti
+prob.addSilver(2,4)
+prob.addSilver(4,2)
+
+# genera file PDDL
+prob.generateProblemFile()
+prob.generateInputForDrawing()
 
