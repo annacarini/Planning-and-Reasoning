@@ -4,12 +4,12 @@
 		c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13 c14 c15 c16 c17 c18 c19 c20 c21 c22 c23 c24 c25 - cell
 		t3_1 t3_2 t3_3 t3_4 - tile_3
 		t6_1 - tile_6
-		;t9_1 - tile_9
+		t9_1 - tile_9
 		ta_1 - tile_a
 		tb_1 - tile_b
 		tc_1 - tile_c
 		tf_1 - tile_f
-		tk1 tk2 tk3 tk4 tk5 tk6 - token
+		d1 d2 d3 d4 d5 d6 d7 d8 d9 d10 - debt
 	)
 	(:init
 		(is_above c1 c6)
@@ -63,15 +63,16 @@
 		(and
 			(has_tile c7)
 			(has_tile c19)
-
-			(or
-				(has_silver c15)
-				(has_tile c15)
-			)
-			(or
-				(has_silver c23)
-				(has_tile c23)
-			)
+			(not (has_debt d1))
+			(not (has_debt d2))
+			(not (has_debt d3))
+			(not (has_debt d4))
+			(not (has_debt d5))
+			(not (has_debt d6))
+			(not (has_debt d7))
+			(not (has_debt d8))
+			(not (has_debt d9))
+			(not (has_debt d10))
 		)
 	)
 	(:metric

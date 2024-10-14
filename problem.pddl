@@ -13,6 +13,8 @@
         ; tile 3
         t3_1 t3_2 t3_3 t3_4 t3_5 - tile_3
         
+        ;t5_1 t5_2 - tile_5
+
         ; tile 7
         t7_1 - tile_7
 
@@ -20,12 +22,14 @@
         ta_1 - tile_a
 
         ; tile c
-        tc_1 tc_2 - tile_c
+        tc_1 - tile_c
 
-        tb_1 - tile_b
+        ;tb_1 - tile_b
 
-        ; token
-        tk1 tk2 tk3 - token
+        ;tf_1 tf_2 - tile_f
+
+        ; debiti
+        d1 d2 d3 d4 d5 d6 d7 d8 d9 d10 d11 d12 d13 d14 - debt
     )
 
     (:init
@@ -50,12 +54,8 @@
         (is_right c12 c11)
 
         ; posizioni degli argenti
-        (has_silver c6)
-        ;(has_silver c7)
-
-        ; per controllare gli argenti
-        (cell_is_ok c6)
-        ;(cell_is_ok c7)
+        ;(has_silver c6)
+        (has_silver c7)
 
         (= (total-cost) 0)
     )
@@ -70,10 +70,20 @@
             (has_tile c9)
             (has_tile c11)
 
-            ; controllo argenti
-            (cell_is_ok c6)
-            ;(cell_is_ok c7)
-
+            (not (has_debt d1))
+            (not (has_debt d2))
+            (not (has_debt d3))
+            (not (has_debt d4))
+            (not (has_debt d5))
+            (not (has_debt d6))
+            (not (has_debt d7))
+            (not (has_debt d8))
+            (not (has_debt d9))
+            (not (has_debt d10))
+            (not (has_debt d11))
+            (not (has_debt d12))
+            (not (has_debt d13))
+            (not (has_debt d14))
         )
     )
 
