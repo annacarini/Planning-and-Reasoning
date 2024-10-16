@@ -98,14 +98,12 @@
             ; t e' usata
             (used ?t)
 
-            ; segna che la cella e' ok
-              
-
-             
 
             ; segna che abbiamo messo (almeno) una tile
             (first_tile_positioned)
 
+
+            (increase (total-cost) 6)
         )
 
     )
@@ -179,7 +177,7 @@
 
              
 
-        
+            (increase (total-cost) 2)       
         )
     )
 
@@ -248,7 +246,7 @@
             (first_tile_positioned)
 
              
-
+            (increase (total-cost) 2)
             
         )
     )
@@ -327,7 +325,7 @@
 
              
 
-        
+            (increase (total-cost) 8)
         )
     )
 
@@ -397,7 +395,8 @@
               
 
             (first_tile_positioned)
-            
+
+            (increase (total-cost) 2)
         )
     )
 
@@ -464,6 +463,8 @@
               
 
             (first_tile_positioned)
+
+            (increase (total-cost) 2)
         )
     )
 
@@ -539,7 +540,7 @@
             (first_tile_positioned)
 
              
-        
+            (increase (total-cost) 8)
            
         )
     )
@@ -611,7 +612,7 @@
             (first_tile_positioned)
 
              
-        
+            (increase (total-cost) 6)
             
         )
     )
@@ -687,8 +688,7 @@
 
             (first_tile_positioned)
 
-             
-        
+            (increase (total-cost) 8)
            
         )
     )
@@ -767,7 +767,7 @@
             (first_tile_positioned)
 
              
-        
+            (increase (total-cost) 8)   
             
         )
     )
@@ -850,6 +850,8 @@
               
 
             (first_tile_positioned)
+
+            (increase (total-cost) 15)
 
         )
     )
