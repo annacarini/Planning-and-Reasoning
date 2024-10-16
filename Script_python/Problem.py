@@ -175,7 +175,7 @@ class Problem:
         if (self.tilesF > 0):
             f.write("\t\t" + self.createTileObjectsString(self.tilesF, "f") + "\n")
 
-
+        '''
         # debt, 1 per ogni tile
         tiles_quantity = self.tiles3 + self.tiles5 + self.tiles6 + self.tiles7 + self.tiles9 \
             + self.tilesA + self.tilesB + self.tilesC + self.tilesD + self.tilesE + self.tilesF
@@ -184,7 +184,7 @@ class Problem:
             debtToWrite += "d" + str(i+1) + " "
         debtToWrite += "- debt\n"
         f.write(debtToWrite)
-
+        '''
 
         f.write("\t)\n")
         ########### FINE OBJECTS ###########
@@ -232,12 +232,13 @@ class Problem:
             toWrite += "\t\t\t(has_tile " + self.cellAtPosition(gold.row, gold.col) + ")\n"
         f.write(toWrite)
 
+        '''
         # controllo debiti
         debtToWrite = ""
         for i in range(0, tiles_quantity):
             debtToWrite += "\t\t\t(not (has_debt d" + str(i+1) + "))\n"
         f.write(debtToWrite)
-
+        '''
 
         f.write("\t\t)\n\t)\n")
         ########### FINE GOAL ###########

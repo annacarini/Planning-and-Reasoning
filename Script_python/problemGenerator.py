@@ -26,7 +26,7 @@ prob.addSilver(1,2)
 prob.generateProblemFile()
 prob.generateInputForDrawing()
 
-
+'''
 
 ################## ISTANZA 1 ##################
 
@@ -51,14 +51,14 @@ prob.addGold(7,2)
 prob.addGold(6,6)
 
 # argenti
-prob.addSilver(4,4)
-prob.addSilver(4,2)
-prob.addSilver(6,0)
-prob.addSilver(7,5)
+#prob.addSilver(4,4)
+#prob.addSilver(4,2)
+#prob.addSilver(6,0)
+#prob.addSilver(7,5)
 
 # genera file PDDL
 prob.generateProblemFile()
-#prob.generateInputForDrawing()
+prob.generateInputForDrawing()
 
 
 
@@ -85,15 +85,15 @@ prob.addGold(5,6)
 prob.addGold(11,7)
 
 # argenti
-prob.addSilver(2,2)
-prob.addSilver(3,5)
-prob.addSilver(7,3)
-prob.addSilver(10,4)
-prob.addSilver(11,2)
+#prob.addSilver(2,2)
+#prob.addSilver(3,5)
+#prob.addSilver(7,3)
+#prob.addSilver(10,4)
+#prob.addSilver(11,2)
 
 # genera file PDDL
 prob.generateProblemFile()
-#prob.generateInputForDrawing()
+prob.generateInputForDrawing()
 
 
 
@@ -121,15 +121,15 @@ prob.addGold(8,11)
 prob.addGold(9,2)
 
 # argenti
-prob.addSilver(1,5)
-prob.addSilver(3,6)
-prob.addSilver(6,9)
-prob.addSilver(8,4)
-prob.addSilver(9,7)
+#prob.addSilver(1,5)
+#prob.addSilver(3,6)
+#prob.addSilver(6,9)
+#prob.addSilver(8,4)
+#prob.addSilver(9,7)
 
 # genera file PDDL
 prob.generateProblemFile()
-#prob.generateInputForDrawing()
+prob.generateInputForDrawing()
 
 
 ################## ISTANZA 4 ##################
@@ -155,14 +155,14 @@ prob.addGold(6,7)
 prob.addGold(7,9)
 
 # argenti
-prob.addSilver(1,1)
-prob.addSilver(2,4)
-prob.addSilver(4,6)
-prob.addSilver(5,8)
+#prob.addSilver(1,1)
+#prob.addSilver(2,4)
+#prob.addSilver(4,6)
+#prob.addSilver(5,8)
 
 # genera file PDDL
 prob.generateProblemFile()
-#prob.generateInputForDrawing()
+prob.generateInputForDrawing()
 
 
 ################## ISTANZA 5 ##################
@@ -188,17 +188,17 @@ prob.addGold(6,3)
 prob.addGold(10,5)
 
 # argenti
-prob.addSilver(1,2)
-prob.addSilver(4,4)
-prob.addSilver(5,2)
-prob.addSilver(7,5)
-prob.addSilver(10,1)
+#prob.addSilver(1,2)
+#prob.addSilver(4,4)
+#prob.addSilver(5,2)
+#prob.addSilver(7,5)
+#prob.addSilver(10,1)
 
 # genera file PDDL
 prob.generateProblemFile()
-#prob.generateInputForDrawing()
+prob.generateInputForDrawing()
 
-
+'''
 
 ################## ISTANZA 6 ##################
 
@@ -230,7 +230,7 @@ prob.addSilver(7,4)
 prob.generateProblemFile()
 prob.generateInputForDrawing()
 
-'''
+
 
 ################## ISTANZA 7 ##################
 
@@ -261,6 +261,6 @@ prob.addSilver(4,2)
 prob.generateProblemFile()
 prob.generateInputForDrawing()
 
-
+'''
 
 

@@ -5,7 +5,6 @@
         cell - object
         tile - object
         tile_3 tile_5 tile_6 tile_7 tile_9 tile_a tile_b tile_c tile_d tile_e tile_f - tile
-        debt - object
     )
 
     (:predicates
@@ -13,12 +12,8 @@
         (is_above ?c1 - cell ?c2 - cell)
         (is_right ?c1 - cell ?c2 - cell)
 
-        (has_silver ?c - cell)
-
         ; per indicare quali tile sono gia' state usate
         (used ?t - tile)
-
-        (has_debt ?d - debt)
 
         ; per ridurre la complessita' delle precondizioni - senza questo predicato non funziona
         (has_tile ?c - cell)
@@ -42,14 +37,14 @@
     ;############################################### TILE 3 ###############################################
 
     (:action place_tile_3
-        :parameters (?c - cell ?t - tile_3 ?d - debt)
+        :parameters (?c - cell ?t - tile_3)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a dx o a sx ci deve essere o un oro o una tile,
             ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile a dx
             ; deve essere di tipo { 3, 6, 7, a, b, e, f }
                          
-            (not (has_debt ?d))
+        
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -92,8 +87,6 @@
             (has_tile ?c)
             (open_right ?c)
             (open_left ?c)
-
-            (has_debt ?d)
             
             ; t e' usata
             (used ?t)
@@ -114,14 +107,14 @@
     ;############################################### TILE 5 ###############################################
 
     (:action place_tile_5
-        :parameters (?c - cell ?t - tile_5 ?d - debt)
+        :parameters (?c - cell ?t - tile_5)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella a dx o sotto ci deve essere o un oro o una tile,
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
-            (not (has_debt ?d))
+        
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -160,8 +153,6 @@
 
         :effect (and
             ; c'e' la tile t su c
-
-            (has_debt ?d)
             
             (has_tile ?c)
             (open_below ?c)
@@ -186,14 +177,14 @@
     ;############################################### TILE 6 ###############################################
 
     (:action place_tile_6
-        :parameters (?c - cell ?t - tile_6 ?d - debt)
+        :parameters (?c - cell ?t - tile_6)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella a sx o sotto ci deve essere o un oro o una tile,
             ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
-            (not (has_debt ?d))
+        
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -235,8 +226,6 @@
             (open_below ?c)
             (open_left ?c)
 
-            (has_debt ?d)
-
             ; t e' usata
             (used ?t)
 
@@ -257,7 +246,7 @@
 
 
     (:action place_tile_7
-        :parameters (?c - cell ?t - tile_7 ?d - debt)
+        :parameters (?c - cell ?t - tile_7)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a sx o dx o sotto ci deve essere o un oro o una tile,
@@ -268,7 +257,7 @@
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
 
-            (not (has_debt ?d))
+        
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
@@ -307,8 +296,6 @@
 
         :effect (and
             ; c'e' la tile t su c
-
-            (has_debt ?d)
             
             (has_tile ?c)
             (open_below ?c)
@@ -335,7 +322,7 @@
 
 
     (:action place_tile_9
-        :parameters (?c - cell ?t - tile_9 ?d - debt)
+        :parameters (?c - cell ?t - tile_9)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a dx o sopra ci deve essere o un oro o una tile,
@@ -345,7 +332,7 @@
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
 
-            (not (has_debt ?d))
+        
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
@@ -381,8 +368,6 @@
 
         :effect (and
             ; c'e' la tile t su c
-
-            (has_debt ?d)
             
             (has_tile ?c)
             (open_above ?c)
@@ -405,14 +390,14 @@
     ;############################################### TILE A ###############################################
 
     (:action place_tile_a
-        :parameters (?c - cell ?t - tile_a ?d - debt)
+        :parameters (?c - cell ?t - tile_a)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a sx o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile a sx deve essere di tipo:
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
-            (not (has_debt ?d))
+        
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -454,8 +439,6 @@
             (open_above ?c)
             (open_left ?c)
 
-            (has_debt ?d)
-
             ; t e' usata
             (used ?t)
 
@@ -475,7 +458,7 @@
 
 
     (:action place_tile_b
-        :parameters (?c - cell ?t - tile_b ?d - debt)
+        :parameters (?c - cell ?t - tile_b)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a sx o dx o sopra ci deve essere o un oro o una tile,
@@ -485,7 +468,7 @@
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
 
-            (not (has_debt ?d))
+        
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
@@ -529,8 +512,6 @@
             (open_right ?c)
             (open_above ?c)
 
-            (has_debt ?d)
-
             ; t e' usata
             (used ?t)
 
@@ -551,7 +532,7 @@
     ;############################################### TILE C ###############################################
 
     (:action place_tile_c
-        :parameters (?c - cell ?t - tile_c ?d - debt)
+        :parameters (?c - cell ?t - tile_c)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o sotto o sopra ci deve essere o un oro o una tile,
@@ -559,7 +540,7 @@
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
 
-            (not (has_debt ?d))
+        
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -601,8 +582,6 @@
             (open_above ?c)
             (open_below ?c)
 
-            (has_debt ?d)
-
             ; t e' usata
             (used ?t)
 
@@ -623,14 +602,14 @@
 
 
     (:action place_tile_d
-        :parameters (?c - cell ?t - tile_d ?d - debt)
+        :parameters (?c - cell ?t - tile_d)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a dx o sotto o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
-            (not (has_debt ?d))
+        
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -678,8 +657,6 @@
             (open_above ?c)
             (open_right ?c)
 
-            (has_debt ?d)
-
             ; t e' usata
             (used ?t)
 
@@ -699,7 +676,7 @@
 
     
     (:action place_tile_e
-        :parameters (?c - cell ?t - tile_e ?d - debt)
+        :parameters (?c - cell ?t - tile_e)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a sx o sotto o sopra ci deve essere o un oro o una tile,
@@ -709,7 +686,7 @@
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
 
-            (not (has_debt ?d))
+        
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
@@ -756,8 +733,6 @@
             (open_above ?c)
             (open_below ?c)
 
-            (has_debt ?d)
-
             ; t e' usata
             (used ?t)
 
@@ -779,16 +754,13 @@
 
 
     (:action place_tile_f
-        :parameters (?c - cell ?t - tile_f ?d - debt)
+        :parameters (?c - cell ?t - tile_f)
         
         :precondition (and
             ; non ci deve essere una tile, in una casella o a sx o dx o sotto o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-
-            (not (has_debt ?d))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -841,8 +813,6 @@
             (open_left ?c)
             (open_right ?c)
 
-            (has_debt ?d)
-
             ; t e' usata
             (used ?t)
 
@@ -853,46 +823,6 @@
 
             (increase (total-cost) 15)
 
-        )
-    )
-
-
-    ;############################################### ALTRO ###############################################
-
-
-    (:action take_silver
-        :parameters (?c - cell ?d1 ?d2 ?d3 - debt)
-        
-        :precondition (and
-            (has_silver ?c)
-            (has_tile ?c)
-            (not (= ?d1 ?d2))
-            (not (= ?d3 ?d2))
-            (not (= ?d3 ?d1))
-            (has_debt ?d1)
-            (has_debt ?d2)
-            (has_debt ?d3)
-        )
-
-        :effect (and
-            ; hai preso l'argento e i token
-            (not (has_silver ?c))
-            (not (has_debt ?d1))
-            (not (has_debt ?d2))
-            (not (has_debt ?d3))
-        )
-    )
-
-    (:action pay_debt
-        :parameters (?d - debt)
-        
-        :precondition (and
-            (has_debt ?d)
-        )
-
-        :effect (and
-            (not (has_debt ?d))
-            (increase (total-cost) 1)
         )
     )
 
