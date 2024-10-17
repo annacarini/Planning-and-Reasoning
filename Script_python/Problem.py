@@ -198,21 +198,21 @@ class Problem:
         gridInit = self.createGridInitString(2)
         f.write(gridInit)
 
+        # posiziono una tile F sul primo oro
+        cell = self.cellAtPosition(self.golds[0].row, self.golds[0].col)
+        toWrite = "\n\t\t(has_tile " + cell + ")\n"
+        toWrite += "\t\t(open_left " + cell + ")\n"
+        toWrite += "\t\t(open_above " + cell + ")\n"
+        toWrite += "\t\t(open_below " + cell + ")\n"
+        toWrite += "\t\t(open_right " + cell + ")\n"
+        f.write(toWrite)
+
         # has_silver
         f.write("\n")
         toWrite = ""
         for silv in self.silvers:
             toWrite += "\t\t(has_silver " + self.cellAtPosition(silv.row, silv.col) + ")\n"
         f.write(toWrite)
-
-        '''
-        # cell_is_ok
-        f.write("\n")
-        toWrite = ""
-        for silv in self.silvers:
-            toWrite += "\t\t(cell_is_ok " + self.cellAtPosition(silv.row, silv.col) + ")\n"
-        f.write(toWrite)        
-        '''
         
         # costo iniziale
         f.write("\n\t\t(= (total-cost) 0)\n")

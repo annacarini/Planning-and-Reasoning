@@ -8,8 +8,9 @@
 		ta_1 - tile_a
 		tb_1 - tile_b
 		tc_1 - tile_c
+		te_1 te_2 te_3 - tile_e
 		tf_1 - tile_f
-		d1 d2 d3 d4 d5 d6 d7 d8 d9 d10 - debt
+		d1 d2 d3 d4 d5 d6 d7 d8 d9 d10 d11 d12 d13 - debt
 	)
 	(:init
 		(is_above c1 c6)
@@ -54,6 +55,12 @@
 		(is_right c24 c23)
 		(is_right c25 c24)
 
+		(has_tile c7)
+		(open_left c7)
+		(open_above c7)
+		(open_below c7)
+		(open_right c7)
+
 		(has_silver c15)
 		(has_silver c23)
 
@@ -73,6 +80,9 @@
 			(not (has_debt d8))
 			(not (has_debt d9))
 			(not (has_debt d10))
+			(not (has_debt d11))
+			(not (has_debt d12))
+			(not (has_debt d13))
 		)
 	)
 	(:metric

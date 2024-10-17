@@ -1,7 +1,7 @@
 import sys
 import PIL
 from PIL import Image, ImageDraw
-from TileDrawer import *
+from TileDrawer2 import *
 import os
 
 
@@ -9,13 +9,16 @@ import os
 
 # PARAMETRI GRAFICI
 CELL_SIZE = 100
-GRID_COLOR = (170, 170, 170)
-GRID_LINE_WIDTH = 6
+GRID_COLOR = (100, 100, 100)
+GRID_LINE_WIDTH = 2
 GOLD_COLOR = (247, 212, 43)
 SILVER_COLOR = (128, 128, 128)
 RAIL_COLOR = (33, 168, 186, 150)
+BACKGROUND_COLOR = (203, 225, 156)
+#BACKGROUND_COLOR = (255, 255, 255)
 PROBLEMS_DIR = "Script_python"
 PLAN_NAME_NO_EXT = "sas_plan"
+
 
 # Prefisso azione di posizionamento tile nel plan
 PLACE_TILE_PREFIX = "(place_tile_"
@@ -97,9 +100,11 @@ def main():
     golds = [eval(x) for x in golds_strings]
 
     # ARGENTI
-    silvers_strings = problem_lines[2].split(";")     # ["(0,0)", ...]
-    silvers = [eval(x) for x in silvers_strings]
-
+    silvers = []
+    if (len(problem_lines) > 2):
+        silvers_strings = problem_lines[2].split(";")     # ["(0,0)", ...]
+        silvers = [eval(x) for x in silvers_strings]
+    
 
 
     # Creo dizionario che associa nomi delle celle a posizione
@@ -115,25 +120,8 @@ def main():
     # Crea immagine
     img_width = CELL_SIZE * cols
     img_height = CELL_SIZE * rows
-    img = PIL.Image.new(mode="RGB", size=(img_width, img_height), color=(255,255,255, 255))
+    img = PIL.Image.new(mode="RGB", size=(img_width, img_height), color=BACKGROUND_COLOR)
     draw = ImageDraw.Draw(img, "RGBA")
-
-
-    # Disegna ori
-    for g in golds:
-        pos_x = g[1] * CELL_SIZE + CELL_SIZE/2
-        pos_y = g[0] * CELL_SIZE + CELL_SIZE/2
-        r = CELL_SIZE/4
-        draw.ellipse([(pos_x-r, pos_y-r), (pos_x+r, pos_y+r)], fill=GOLD_COLOR)
-
-
-    # Disegna argenti
-    for s in silvers:
-        pos_x = s[1] * CELL_SIZE + CELL_SIZE/2
-        pos_y = s[0] * CELL_SIZE + CELL_SIZE/2
-        r = CELL_SIZE/4
-        draw.ellipse([(pos_x-r, pos_y-r), (pos_x+r, pos_y+r)], fill=SILVER_COLOR)
-
 
 
     # Apri file con il plan per sapere dove mettere le tile
@@ -163,36 +151,64 @@ def main():
 
             #Disegna la tile
             if (tile_type == "3"):
-                drawTile3(draw, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile3(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
             elif (tile_type == "5"):
-                drawTile5(draw, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile5(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
             elif (tile_type == "6"):
-                drawTile6(draw, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile6(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
             elif (tile_type == "7"):
-                drawTile7(draw, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile7(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
             elif (tile_type == "9"):
-                drawTile9(draw, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile9(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
             elif (tile_type == "a" or tile_type == "A"):
-                drawTileA(draw, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTileA(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
             elif (tile_type == "b" or tile_type == "B"):
-                drawTileB(draw, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTileB(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
             elif (tile_type == "c" or tile_type == "C"):
-                drawTileC(draw, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTileC(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
             elif (tile_type == "d" or tile_type == "D"):
-                drawTileD(draw, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTileD(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
             elif (tile_type == "e" or tile_type == "E"):
-                drawTileE(draw, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTileE(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
             elif (tile_type == "f" or tile_type == "F"):
-                drawTileF(draw, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
-      
+                drawTileF(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
 
 
+    # Disegna una tile F dove c'e' il primo oro (solo per questa versione del domain)
+    drawTileF(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(golds[0][0],golds[0][1],CELL_SIZE))
+
+
+    # Disegna ori
+    for g in golds:
+        pos_x = g[1] * CELL_SIZE + CELL_SIZE/2
+        pos_y = g[0] * CELL_SIZE + CELL_SIZE/2
+        r = CELL_SIZE/4
+        #draw.ellipse([(pos_x-r, pos_y-r), (pos_x+r, pos_y+r)], fill=GOLD_COLOR)
+        x = g[1] * CELL_SIZE
+        y = g[0] * CELL_SIZE
+        im = Image.open("Script_python/images/gold.png")
+        img.paste(im, [x, y], im)
+
+
+    # Disegna argenti
+    for s in silvers:
+        pos_x = s[1] * CELL_SIZE + CELL_SIZE/2
+        pos_y = s[0] * CELL_SIZE + CELL_SIZE/2
+        r = CELL_SIZE/4
+        #draw.ellipse([(pos_x-r, pos_y-r), (pos_x+r, pos_y+r)], fill=SILVER_COLOR)
+        x = s[1] * CELL_SIZE
+        y = s[0] * CELL_SIZE
+        im = Image.open("Script_python/images/silver.png")
+        img.paste(im, [x, y], im)
+
+
+    
     # Disegna griglia
     for i in range(1, rows):
         draw.line([(0, i*CELL_SIZE), (img.width, i*CELL_SIZE)], fill=GRID_COLOR, width=GRID_LINE_WIDTH)
     for i in range(1, cols):
         draw.line([(i*CELL_SIZE, 0), (i*CELL_SIZE, img.height)], fill=GRID_COLOR, width=GRID_LINE_WIDTH)
-
+    
 
     # Salva immagine
     img.save(os.path.join(PROBLEMS_DIR, problem, problem + "_" + plan_file_name.replace(".", "") + ".png"), "PNG")

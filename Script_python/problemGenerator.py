@@ -27,6 +27,9 @@ prob.generateProblemFile()
 prob.generateInputForDrawing()
 
 
+'''
+
+'''
 
 ################## ISTANZA 1 ##################
 
@@ -58,7 +61,7 @@ prob.addSilver(7,5)
 
 # genera file PDDL
 prob.generateProblemFile()
-#prob.generateInputForDrawing()
+prob.generateInputForDrawing()
 
 
 
@@ -93,7 +96,7 @@ prob.addSilver(11,2)
 
 # genera file PDDL
 prob.generateProblemFile()
-#prob.generateInputForDrawing()
+prob.generateInputForDrawing()
 
 
 
@@ -129,7 +132,7 @@ prob.addSilver(9,7)
 
 # genera file PDDL
 prob.generateProblemFile()
-#prob.generateInputForDrawing()
+prob.generateInputForDrawing()
 
 
 ################## ISTANZA 4 ##################
@@ -162,7 +165,7 @@ prob.addSilver(5,8)
 
 # genera file PDDL
 prob.generateProblemFile()
-#prob.generateInputForDrawing()
+prob.generateInputForDrawing()
 
 
 ################## ISTANZA 5 ##################
@@ -196,7 +199,8 @@ prob.addSilver(10,1)
 
 # genera file PDDL
 prob.generateProblemFile()
-#prob.generateInputForDrawing()
+prob.generateInputForDrawing()
+
 
 
 
@@ -246,7 +250,7 @@ prob.setTilesA(1)
 prob.setTilesB(1)
 prob.setTilesC(1)
 #prob.setTilesD(4)
-#prob.setTilesE(3)
+prob.setTilesE(3)
 prob.setTilesF(1)
 
 #ori
