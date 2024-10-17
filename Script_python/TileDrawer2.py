@@ -8,7 +8,7 @@ def getCellCorners(r,c, cell_size):
 
 # FUNZIONI PER DISEGNARE LE TILE
 
-def drawTile3(draw, color, width, corners):
+def drawTile3(img, color, width, corners):
     
     x1 = corners[0]
     y1 = corners[1]
@@ -17,11 +17,11 @@ def drawTile3(draw, color, width, corners):
     y = (y1 + y2)/2
     #draw.line([(x1, y), (x2, y)], fill=color, width=width)
     im = Image.open("Script_python/images/tile_3.png")
-    ImageDraw.bitmap([x1, y1], im, fill=None)
+    img.paste(im, [x1, y1], im)
     return
 
 
-def drawTile5(draw, color, width, corners):
+def drawTile5(img, color, width, corners):
     x1 = corners[0]
     y1 = corners[1]
     x2 = corners[2]
@@ -38,7 +38,9 @@ def drawTile5(draw, color, width, corners):
     ey = (y2+y1)/2 + width/2
     fx = (x2+x1)/2 + width/2
     fy = y2
-    draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy)], fill=color)
+    #draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy)], fill=color)
+    im = Image.open("Script_python/images/tile_5.png")
+    img.paste(im, [x1, y1], im)
     return
 
 
@@ -65,7 +67,7 @@ def drawTile6(img, color, width, corners):
     return
 
 
-def drawTile7(draw, color, width, corners):
+def drawTile7(img, color, width, corners):
     x1 = corners[0]
     y1 = corners[1]
     x2 = corners[2]
@@ -86,7 +88,9 @@ def drawTile7(draw, color, width, corners):
     gy = (y2+y1)/2 + width/2
     hx = (x2+x1)/2 + width/2
     hy = y2
-    draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy), (gx,gy), (hx,hy)], fill=color)
+    #draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy), (gx,gy), (hx,hy)], fill=color)
+    im = Image.open("Script_python/images/tile_7.png")
+    img.paste(im, [x1, y1], im)
     return
 
 
@@ -113,7 +117,7 @@ def drawTile9(img, color, width, corners):
     return
 
 
-def drawTileA(draw, color, width, corners):
+def drawTileA(img, color, width, corners):
     x1 = corners[0]
     y1 = corners[1]
     x2 = corners[2]
@@ -130,11 +134,13 @@ def drawTileA(draw, color, width, corners):
     ey = (y2+y1)/2 + width/2
     fx = (x2+x1)/2 + width/2
     fy = y1
-    draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy)], fill=color)
+    #draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy)], fill=color)
+    im = Image.open("Script_python/images/tile_a.png")
+    img.paste(im, [x1, y1], im)
     return
 
 
-def drawTileB(draw, color, width, corners):
+def drawTileB(img, color, width, corners):
     x1 = corners[0]
     y1 = corners[1]
     x2 = corners[2]
@@ -155,7 +161,9 @@ def drawTileB(draw, color, width, corners):
     gy = (y2+y1)/2 - width/2
     hx = (x2+x1)/2 + width/2
     hy = y1
-    draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy), (gx,gy), (hx,hy)], fill=color)
+    #draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy), (gx,gy), (hx,hy)], fill=color)
+    im = Image.open("Script_python/images/tile_b.png")
+    img.paste(im, [x1, y1], im)
     return
 
 
@@ -172,7 +180,7 @@ def drawTileC(img, color, width, corners):
     return
 
 
-def drawTileD(draw, color, width, corners):
+def drawTileD(img, color, width, corners):
     x1 = corners[0]
     y1 = corners[1]
     x2 = corners[2]
@@ -193,11 +201,13 @@ def drawTileD(draw, color, width, corners):
     gy = (y2+y1)/2 + width/2
     hx = (x2+x1)/2 + width/2
     hy = y2
-    draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy), (gx,gy), (hx,hy)], fill=color)
+    #draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy), (gx,gy), (hx,hy)], fill=color)
+    im = Image.open("Script_python/images/tile_d.png")
+    img.paste(im, [x1, y1], im)
     return
 
 
-def drawTileE(draw, color, width, corners):
+def drawTileE(img, color, width, corners):
     x1 = corners[0]
     y1 = corners[1]
     x2 = corners[2]
@@ -218,12 +228,14 @@ def drawTileE(draw, color, width, corners):
     gy = (y2+y1)/2 + width/2
     hx = (x2+x1)/2 - width/2
     hy = (y2+y1)/2 + width/2
-    draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy), (gx,gy), (hx,hy)], fill=color)
+    #draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy), (gx,gy), (hx,hy)], fill=color)
+    im = Image.open("Script_python/images/tile_e.png")
+    img.paste(im, [x1, y1], im)
     return
 
 
 
-def drawTileF(draw, color, width, corners):
+def drawTileF(img, color, width, corners):
     x1 = corners[0]
     y1 = corners[1]
     x2 = corners[2]
@@ -252,7 +264,9 @@ def drawTileF(draw, color, width, corners):
     ky = (y2+y1)/2 + width/2
     lx = (x2+x1)/2 - width/2
     ly = (y2+y1)/2 + width/2
-    draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy), (gx,gy), (hx,hy), (ix,iy), (jx,jy), (kx,ky), (lx,ly)], fill=color)
+    #draw.polygon([(ax,ay), (bx,by), (cx,cy), (dx,dy), (ex,ey), (fx,fy), (gx,gy), (hx,hy), (ix,iy), (jx,jy), (kx,ky), (lx,ly)], fill=color)
+    im = Image.open("Script_python/images/tile_f.png")
+    img.paste(im, [x1, y1], im)
     return
 
 
