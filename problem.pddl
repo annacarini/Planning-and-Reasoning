@@ -53,6 +53,12 @@
         (is_right c11 c10)
         (is_right c12 c11)
 
+        (has_tile c1)
+        (open_left c1)
+        (open_above c1)
+        (open_below c1)
+        (open_right c1)
+
         ; posizioni degli argenti
         ;(has_silver c6)
         (has_silver c7)

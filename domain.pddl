@@ -28,15 +28,15 @@
         (open_above ?c - cell)
         (open_below ?c - cell)
 
-
-        ; per indicare se abbiamo messo la prima tile
-        (first_tile_positioned)
+        (started_paying)
 
     )
 
     (:functions
         (total-cost)
     )
+
+
 
 
     ;############################################### TILE 3 ###############################################
@@ -48,6 +48,7 @@
             ; non ci deve essere una tile, in una casella o a dx o a sx ci deve essere o un oro o una tile,
             ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile a dx
             ; deve essere di tipo { 3, 6, 7, a, b, e, f }
+            (not (started_paying))
                          
             (not (has_debt ?d))
 
@@ -58,32 +59,30 @@
             (not (has_tile ?c))
             
             ; deve esserci almeno una cella c2 a dx o a sx con un oro o una tile
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                ; oppure c'e' una cella o a dx o a sx che ha una tile, e se ci sono celle a dx o sx con tile
-                ; devono essere tile appropriate
             
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c ?c2)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        
+
+            ; oppure c'e' una cella o a dx o a sx che ha una tile, e se ci sono celle a dx o sx con tile
+            ; devono essere tile appropriate
+        
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_right ?c ?c2)
+                        (open_right ?c2)
                     )
-                        
-                        
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
+                    )
+                    
                 )
+                    
+                    
+            )
                     ; se una cella c2 e' a dx o a sx e ha una tile, deve essere appropriata
                 
-            )
+            
 
         )
 
@@ -99,8 +98,7 @@
             (used ?t)
 
 
-            ; segna che abbiamo messo (almeno) una tile
-            (first_tile_positioned)
+            
 
 
             (increase (total-cost) 6)
@@ -123,6 +121,8 @@
 
             (not (has_debt ?d))
 
+            (not (started_paying))
+
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
             
@@ -130,32 +130,28 @@
             (not (has_tile ?c))
 
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-               
+           
                 ; deve esserci almeno una cella c2 a dx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)  
-                        )
-                        (and
-                            (is_above ?c ?c2)
-                            (open_above ?c2)
-                        )
-                        
-                        
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)  
                     )
-                        
-                        
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+                    
+                    
                 )
+                    
+                    
+            )
 
               
-            )
+            
         )
 
         :effect (and
@@ -171,11 +167,7 @@
             (used ?t)
 
             ; segna che la cella e' ok
-              
 
-            (first_tile_positioned)
-
-             
 
             (increase (total-cost) 2)       
         )
@@ -195,6 +187,8 @@
 
             (not (has_debt ?d))
 
+            (not (started_paying))
+
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
             
@@ -202,30 +196,27 @@
             (not (has_tile ?c))
             
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
 
                 
-                    ; deve esserci almeno una cella c2 a sx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                
-                    (or
-                        (and
-                            (is_right ?c ?c2)                     
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_above ?c ?c2)
-                            (open_above ?c2)
-                        )
-                        
+                ; deve esserci almeno una cella c2 a sx o sotto con un oro o una tile
+            (exists (?c2 - cell)
+            
+                (or
+                    (and
+                        (is_right ?c ?c2)                     
+                        (open_right ?c2)
                     )
-                        
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+                    
                 )
-                   
-                
+                    
             )
+                
+                
+            
         )
 
         :effect (and
@@ -239,11 +230,7 @@
 
             ; t e' usata
             (used ?t)
-
-            ; segna che la cella e' ok
-              
-
-            (first_tile_positioned)
+            
 
              
             (increase (total-cost) 2)
@@ -268,38 +255,37 @@
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
 
+            (not (started_paying))
+
             (not (has_debt ?d))
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
     
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
+         
                
                     ; deve esserci almeno una cella c2 a sx o dx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c ?c2)     
-                            (open_right ?c2)                     
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c ?c2)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                        
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_right ?c ?c2)     
+                        (open_right ?c2)                     
                     )
-                        
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
+                    )
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+                    
+                    
+                    
                 )
+                        
+                
                     ; o a sx o dx o sotto ci deve essere un oro o una tile
                   
             )
@@ -318,10 +304,7 @@
             ; t e' usata
             (used ?t)
 
-            ; segna che la cella e' ok
-              
 
-            (first_tile_positioned)
 
              
 
@@ -345,38 +328,35 @@
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
 
+            (not (started_paying))
+
             (not (has_debt ?d))
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
             
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
                 
                     ; deve esserci almeno una cella c2 a dx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
+            (exists (?c2 - cell)
+                
+                (or
 
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
+                    )
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
                     )
                     
                 )
-                    ; o a dx o sopra ci deve essere un oro o una tile
-                   
                 
             )
+                    ; o a dx o sopra ci deve essere un oro o una tile
+                   
+            
         )
 
         :effect (and
@@ -391,10 +371,9 @@
             ; t e' usata
             (used ?t)
 
-            ; segna che la cella e' ok
-              
+           
 
-            (first_tile_positioned)
+            
 
             (increase (total-cost) 2)
         )
@@ -414,37 +393,35 @@
 
             (not (has_debt ?d))
 
+            (not (started_paying))
+
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                
+         
                     ; deve esserci almeno una cella c2 a sx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c ?c2)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
-                    )
-                        
-                )
-                    ; o a sx o sopra ci deve essere un oro o una tile
-                    
+            (exists (?c2 - cell)
                 
+                (or
+                    (and
+                        (is_right ?c ?c2)
+                        (open_right ?c2)
+                    )
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
+                    )
+                    
+                )
+                    
             )
+                ; o a sx o sopra ci deve essere un oro o una tile
+                
+                
+            
         )
 
         :effect (and
@@ -461,9 +438,6 @@
 
             ; segna che la cella e' ok
               
-
-            (first_tile_positioned)
-
             (increase (total-cost) 2)
         )
     )
@@ -486,36 +460,34 @@
             (not (used ?t))
 
             (not (has_debt ?d))
+
+            (not (started_paying))
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-               
+         
                     ; deve esserci almeno una cella c2 a sx o dx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c ?c2)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
-                            
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_right ?c ?c2)
+                        (open_right ?c2)
                     )
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
+                    )
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
+                    )
+                    
                         
                 )
+                        
+                
                     ; o a sx o dx o sopra ci deve essere un oro o una tile
                    
             )
@@ -536,10 +508,6 @@
 
             ; segna che la cella e' ok
               
-
-            (first_tile_positioned)
-
-             
             (increase (total-cost) 8)
            
         )
@@ -561,37 +529,35 @@
 
             (not (has_debt ?d))
 
+            (not (started_paying))
+
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-               
+    
                     ; deve esserci almeno una cella sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_above ?c ?c2)
-                            (open_above ?c2)
-                        )
-                        
-                        
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
                     )
-                        
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+                    
+                    
                 )
-                    ; su ogni cella o sotto o sopra ci deve essere un oro o una tile appropriata
                     
             )
+                    ; su ogni cella o sotto o sopra ci deve essere un oro o una tile appropriata
+                    
+            
         )
 
         :effect (and
@@ -608,9 +574,6 @@
 
             ; segna che la cella e' ok
               
-
-            (first_tile_positioned)
-
              
             (increase (total-cost) 6)
             
@@ -634,36 +597,34 @@
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
+
+            (not (started_paying))
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-                
+        
                     ; deve esserci almeno una cella a dx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_above ?c ?c2)
-                            (open_above ?c2)
-                        )
-                        
-                        
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
                     )
-                            
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
+                    )
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+                    
+                    
                 )
+                        
+                
                     ; o a dx o sotto o sopra ci deve essere un oro o una tile
                     
                        
@@ -685,9 +646,6 @@
 
             ; segna che la cella e' ok
               
-
-            (first_tile_positioned)
-
             (increase (total-cost) 8)
            
         )
@@ -709,39 +667,37 @@
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
 
+            (not (started_paying))
+
             (not (has_debt ?d))
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
                 
                 ; deve esserci almeno una cella a sx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c ?c2)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_above ?c ?c2)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                        
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_right ?c ?c2)
+                        (open_right ?c2)
                     )
-                            
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
+                    )
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+                    
+                    
+                    
                 )
+                        
+                
 
                     ; o a sx o dx o sotto o sopra ci deve essere un oro o una tile
                    
@@ -763,10 +719,6 @@
 
             ; segna che la cella e' ok
               
-
-            (first_tile_positioned)
-
-             
             (increase (total-cost) 8)   
             
         )
@@ -790,6 +742,8 @@
 
             (not (has_debt ?d))
 
+            (not (started_paying))
+
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
             
@@ -797,34 +751,31 @@
             (not (has_tile ?c))
 
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
+
                 
                     ; deve esserci almeno una cella a sx o dx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                
-                    (or
-                        (and
-                            (is_right ?c ?c2)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_above ?c ?c2)
-                            (open_above ?c2)
-                        )
-                        
-                        
+            (exists (?c2 - cell)
+            
+                (or
+                    (and
+                        (is_right ?c ?c2)
+                        (open_right ?c2)
                     )
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
+                    )
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
+                    )
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+                    
+                        
+                    
                             
                 )
                 ; o a sx o dx o sotto o sopra ci deve essere un oro o una tile
@@ -848,9 +799,6 @@
 
             ; segna che la cella e' ok
               
-
-            (first_tile_positioned)
-
             (increase (total-cost) 15)
 
         )
@@ -880,6 +828,7 @@
             (not (has_debt ?d1))
             (not (has_debt ?d2))
             (not (has_debt ?d3))
+            (started_paying)
         )
     )
 
@@ -892,6 +841,7 @@
 
         :effect (and
             (not (has_debt ?d))
+            (started_paying)
             (increase (total-cost) 1)
         )
     )
