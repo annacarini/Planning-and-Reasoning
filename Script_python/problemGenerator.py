@@ -321,6 +321,8 @@ prob.generateInputForDrawing()
 #
 # ################## ISTANZA 3 NEW ##################
 # #
+
+'''
 prob = Problem("new_problem3", 6, 5)
 
 # tiles disponibili
@@ -346,35 +348,36 @@ prob.addSilver(3,0)
 prob.addSilver(0,3)
 prob.addSilver(2,4)
 prob.addSilver(4,2)
-#
-#
-# # ################## ISTANZA 4 NEW ##################
-# #
-# prob = Problem("new_problem4", 9, 3)
-#
-# # tiles disponibili
-# prob.setTiles3(1)
-# prob.setTiles5(2)
-# prob.setTiles6(1)
-# prob.setTiles7(1)
-# prob.setTiles9(2)
-# prob.setTilesA(1)
-# # prob.setTilesB(1)
-# prob.setTilesC(4)
-# #prob.setTilesD(1)
-# prob.setTilesE(1)
-# prob.setTilesF(1)
-#
-# #ori
-# prob.addGold(1,2)
-# prob.addGold(3,0)
-# prob.addGold(6,2)
-#
-# # argenti
-# prob.addSilver(1,0)
-# prob.addSilver(3,1)
-# prob.addSilver(6,1)
-#
+'''
+
+
+################### ISTANZA 4 NEW ##################
+
+prob = Problem("new_problem4", 9, 3)
+
+# tiles disponibili
+prob.setTiles3(3)
+prob.setTiles5(2)
+#prob.setTiles6(1)
+#prob.setTiles7(1)
+prob.setTiles9(1)
+prob.setTilesA(1)
+prob.setTilesB(1)
+prob.setTilesC(2)
+#prob.setTilesD(1)
+prob.setTilesE(1)
+#prob.setTilesF(1)
+
+#ori
+prob.addGold(1,2)
+prob.addGold(3,0)
+prob.addGold(6,2)
+
+# argenti
+prob.addSilver(1,0)
+prob.addSilver(3,1)
+prob.addSilver(6,1)
+
 # # ################## ISTANZA 5 NEW ##################
 # #
 # prob = Problem("new_problem5", 4, 6)
