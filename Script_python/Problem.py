@@ -176,11 +176,9 @@ class Problem:
             f.write("\t\t" + self.createTileObjectsString(self.tilesF, "f") + "\n")
 
 
-        # debt, 1 per ogni tile
-        tiles_quantity = self.tiles3 + self.tiles5 + self.tiles6 + self.tiles7 + self.tiles9 \
-            + self.tilesA + self.tilesB + self.tilesC + self.tilesD + self.tilesE + self.tilesF
+        # debt, 1 per ogni silver
         debtToWrite = "\t\t"
-        for i in range(0, tiles_quantity):
+        for i in range(0, len(self.silvers)):
             debtToWrite += "d" + str(i+1) + " "
         debtToWrite += "- debt\n"
         f.write(debtToWrite)
@@ -213,7 +211,13 @@ class Problem:
         for silv in self.silvers:
             toWrite += "\t\t(has_silver " + self.cellAtPosition(silv.row, silv.col) + ")\n"
         f.write(toWrite)
-        
+
+        # parti con tutti i debiti
+        debtToWrite = "\n"
+        for i in range(0, len(self.silvers)):
+            debtToWrite += "\t\t(has_debt d" + str(i+1) + ")\n"
+        f.write(debtToWrite)
+
         # costo iniziale
         f.write("\n\t\t(= (total-cost) 0)\n")
 
@@ -234,7 +238,7 @@ class Problem:
 
         # controllo debiti
         debtToWrite = ""
-        for i in range(0, tiles_quantity):
+        for i in range(0, len(self.silvers)):
             debtToWrite += "\t\t\t(not (has_debt d" + str(i+1) + "))\n"
         f.write(debtToWrite)
 

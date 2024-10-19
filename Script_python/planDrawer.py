@@ -1,7 +1,6 @@
 import sys
 import PIL
 from PIL import Image, ImageDraw
-from TileDrawer2 import *
 import os
 
 
@@ -11,13 +10,11 @@ import os
 CELL_SIZE = 100
 GRID_COLOR = (100, 100, 100)
 GRID_LINE_WIDTH = 2
-GOLD_COLOR = (247, 212, 43)
-SILVER_COLOR = (128, 128, 128)
-RAIL_COLOR = (33, 168, 186, 150)
 BACKGROUND_COLOR = (203, 225, 156)
 #BACKGROUND_COLOR = (255, 255, 255)
 PROBLEMS_DIR = "Script_python"
 PLAN_NAME_NO_EXT = "sas_plan"
+IMAGES_PATH = "Script_python/images/"
 
 
 # Prefisso azione di posizionamento tile nel plan
@@ -59,6 +56,19 @@ def find_best_plan(cartella):
 
 
 
+
+# FUNZIONI PER DISEGNARE LE TILE:
+
+# Date le coordinate (r,c) di una cella, ti da' le coordinate (x1,y1) e (x2,y2) degli angoli in alto a sx e in basso a dx
+def getCellCorners(r,c, cell_size):
+    return (c*cell_size, r*cell_size, c*cell_size + cell_size, r*cell_size + cell_size)
+
+def drawTile(img, corners, filename):
+    x1 = corners[0]
+    y1 = corners[1]
+    im = Image.open(IMAGES_PATH + filename)
+    img.paste(im, [x1, y1], im)
+    return
 
 
 
@@ -151,39 +161,35 @@ def main():
 
             #Disegna la tile
             if (tile_type == "3"):
-                drawTile3(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile(img, getCellCorners(cell_r,cell_c,CELL_SIZE), "tile_3.png")
             elif (tile_type == "5"):
-                drawTile5(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile(img, getCellCorners(cell_r,cell_c,CELL_SIZE), "tile_5.png")
             elif (tile_type == "6"):
-                drawTile6(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile(img, getCellCorners(cell_r,cell_c,CELL_SIZE), "tile_6.png")
             elif (tile_type == "7"):
-                drawTile7(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile(img, getCellCorners(cell_r,cell_c,CELL_SIZE), "tile_7.png")
             elif (tile_type == "9"):
-                drawTile9(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile(img, getCellCorners(cell_r,cell_c,CELL_SIZE), "tile_9.png")
             elif (tile_type == "a" or tile_type == "A"):
-                drawTileA(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile(img, getCellCorners(cell_r,cell_c,CELL_SIZE), "tile_a.png")
             elif (tile_type == "b" or tile_type == "B"):
-                drawTileB(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile(img, getCellCorners(cell_r,cell_c,CELL_SIZE), "tile_b.png")
             elif (tile_type == "c" or tile_type == "C"):
-                drawTileC(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile(img, getCellCorners(cell_r,cell_c,CELL_SIZE), "tile_c.png")
             elif (tile_type == "d" or tile_type == "D"):
-                drawTileD(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile(img, getCellCorners(cell_r,cell_c,CELL_SIZE), "tile_d.png")
             elif (tile_type == "e" or tile_type == "E"):
-                drawTileE(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile(img, getCellCorners(cell_r,cell_c,CELL_SIZE), "tile_e.png")
             elif (tile_type == "f" or tile_type == "F"):
-                drawTileF(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(cell_r,cell_c,CELL_SIZE))
+                drawTile(img, getCellCorners(cell_r,cell_c,CELL_SIZE), "tile_f.png")
 
 
     # Disegna una tile F dove c'e' il primo oro (solo per questa versione del domain)
-    drawTileF(img, RAIL_COLOR, CELL_SIZE//4, getCellCorners(golds[0][0],golds[0][1],CELL_SIZE))
+    drawTile(img, getCellCorners(golds[0][0],golds[0][1],CELL_SIZE), "tile_f.png")
 
 
     # Disegna ori
     for g in golds:
-        pos_x = g[1] * CELL_SIZE + CELL_SIZE/2
-        pos_y = g[0] * CELL_SIZE + CELL_SIZE/2
-        r = CELL_SIZE/4
-        #draw.ellipse([(pos_x-r, pos_y-r), (pos_x+r, pos_y+r)], fill=GOLD_COLOR)
         x = g[1] * CELL_SIZE
         y = g[0] * CELL_SIZE
         im = Image.open("Script_python/images/gold.png")
@@ -192,10 +198,6 @@ def main():
 
     # Disegna argenti
     for s in silvers:
-        pos_x = s[1] * CELL_SIZE + CELL_SIZE/2
-        pos_y = s[0] * CELL_SIZE + CELL_SIZE/2
-        r = CELL_SIZE/4
-        #draw.ellipse([(pos_x-r, pos_y-r), (pos_x+r, pos_y+r)], fill=SILVER_COLOR)
         x = s[1] * CELL_SIZE
         y = s[0] * CELL_SIZE
         im = Image.open("Script_python/images/silver.png")
