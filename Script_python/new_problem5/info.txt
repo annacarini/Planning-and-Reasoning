@@ -1,0 +1,85 @@
+ISTANZA GENERATA CON:
+
+prob = Problem("new_problem5", 4, 6)
+
+# tiles disponibili
+prob.setTiles3(4)
+prob.setTiles5(2)
+prob.setTiles6(2)
+prob.setTiles7(1)
+prob.setTiles9(2)
+prob.setTilesA(2)
+prob.setTilesB(1)
+prob.setTilesC(2)
+prob.setTilesD(1)
+#prob.setTilesE(1)
+prob.setTilesF(1)
+
+#ori
+prob.addGold(0,5)
+prob.addGold(3,0)
+prob.addGold(1,2)
+
+# argenti
+prob.addSilver(0,1)
+prob.addSilver(2,4)
+prob.addSilver(3,2)
+
+# genera file PDDL
+prob.generateProblemFile()
+prob.generateInputForDrawing()
+
+
+
+
+
+HMAX, no reopening
+
+	Total time: 1638.26s
+	Peak memory: 6473408 KB
+
+	Expanded 28920950 state(s).
+	Reopened 0 state(s).
+	Evaluated 41079120 state(s).
+	Evaluations: 41079120
+	Generated 593561142 state(s).
+	Dead ends: 12158169 state(s).
+	Number of registered states: 41079120
+
+
+	avviato con: --search-memory-limit 8G --search "lazy_wastar([hmax()], reopen_closed=false)"
+
+
+FF, no reopening
+
+	Total time: 1072.32s
+	Peak memory: 3804388 KB
+
+	Expanded 17913469 state(s).
+	Reopened 0 state(s).
+	Evaluated 25133516 state(s).
+	Evaluations: 25133516
+	Generated 351056554 state(s).
+	Dead ends: 7220046 state(s).
+	Number of registered states: 25133516
+
+	avviato con: --search-memory-limit 8G --search "lazy_wastar([ff()], reopen_closed=false)"
+
+
+LMCUT, reopening
+
+	Total time: 1576.96s
+	Peak memory: 4493432 KB
+
+	Expanded 19950962 state(s).
+	Reopened 0 state(s).
+	Evaluated 28149786 state(s).
+	Evaluations: 28149786
+	Generated 395109132 state(s).
+	Dead ends: 8198823 state(s).
+	Number of registered states: 28149786
+
+	avviato con: --search-memory-limit 10G --search "lazy_wastar([lmcut()], reopen_closed=true)"
+
+
+

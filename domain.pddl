@@ -31,6 +31,7 @@
         (open_above ?c - cell)
         (open_below ?c - cell)
 
+        (started_paying)
 
     )
 
@@ -51,6 +52,7 @@
             ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile a dx
             ; deve essere di tipo { 3, 6, 7, a, b, e, f }
              
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -110,6 +112,8 @@
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
+            (not (started_paying))
+
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
             
@@ -166,6 +170,8 @@
             ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
+            (not (started_paying))
+
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
             
@@ -221,6 +227,8 @@
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
             ; { 3, 5, 7, 9, b, d, f }
+
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -279,6 +287,8 @@
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sopra
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
+            (not (started_paying))
+
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
 
@@ -331,6 +341,8 @@
             ; non ci deve essere una tile, in una casella o a sx o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile a sx deve essere di tipo:
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
+
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -387,6 +399,8 @@
             ; non ci deve essere una tile, in una casella o a sx o dx o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile a sx deve essere
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
+
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -447,6 +461,8 @@
             ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
+            (not (started_paying))
+
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
             
@@ -502,6 +518,8 @@
             ; non ci deve essere una tile, in una casella o a dx o sotto o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
+
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -560,6 +578,8 @@
             ; non ci deve essere una tile, in una casella o a sx o sotto o sopra ci deve essere o un oro o una tile,
             ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
+
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -621,6 +641,8 @@
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
+
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -691,7 +713,8 @@
             ; hai preso l'argento e i token
             (not (has_silver ?c))
             (not  (has_debt ?d))
-          
+            
+            (started_paying)
               
         )
     )
@@ -705,6 +728,8 @@
 
         :effect (and
             (not (has_debt ?d))
+
+            (started_paying)
               
             (increase (total-cost) 15)
         )
