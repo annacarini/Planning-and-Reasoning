@@ -1,0 +1,84 @@
+ISTANZA GENERATA CON:
+
+	prob = Problem("new_problem4", 9, 3)
+
+	# tiles disponibili
+	prob.setTiles3(3)
+	prob.setTiles5(2)
+	prob.setTiles6(1)
+	#prob.setTiles7(1)
+	prob.setTiles9(1)
+	prob.setTilesA(2)
+	prob.setTilesB(1)
+	prob.setTilesC(2)
+	#prob.setTilesD(1)
+	prob.setTilesE(1)
+	#prob.setTilesF(1)
+
+	#ori
+	prob.addGold(1,2)
+	prob.addGold(3,0)
+	prob.addGold(6,2)
+
+	# argenti
+	prob.addSilver(1,0)
+	prob.addSilver(3,1)
+	prob.addSilver(6,1)
+
+	# genera file PDDL
+	prob.generateProblemFile()
+	prob.generateInputForDrawing()
+
+
+
+
+HMAX, no reopening
+
+	Total time: 45.8886s
+	la memoria non me l'ha stampata per qualche motivo
+
+	Expanded 1093547 state(s).
+	Reopened 0 state(s).
+	Evaluated 2296899 state(s).
+	Evaluations: 2296899
+	Generated 14282498 state(s).
+	Dead ends: 1203351 state(s).
+	Number of registered states: 2296899
+
+	avviato con: --search "lazy_wastar([hmax()], reopen_closed=false)"
+
+
+
+FF, no reopening
+
+	Total time: 32.9577s
+	la memoria non me l'ha stampata per qualche motivo
+
+	Expanded 802716 state(s).
+	Reopened 0 state(s).
+	Evaluated 1565009 state(s).
+	Evaluations: 1565009
+	Generated 9905261 state(s).
+	Dead ends: 762292 state(s).
+	Number of registered states: 1565009 
+
+	avviato con: --search "lazy_wastar([ff()], reopen_closed=false)"
+
+
+LMCUT, reopening
+
+	Total time: 46.8281s
+	la memoria non me l'ha stampata per qualche motivo	
+
+	Expanded 855091 state(s).
+	Reopened 0 state(s).
+	Evaluated 1668021 state(s).
+	Evaluations: 1668021
+	Generated 10621660 state(s).
+	Dead ends: 812929 state(s).
+	Number of registered states: 1668021
+
+	avviato con: --search "lazy_wastar([lmcut()], reopen_closed=true)"
+
+
+

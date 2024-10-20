@@ -4,12 +4,13 @@
 		c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13 c14 c15 c16 c17 c18 c19 c20 c21 c22 c23 c24 c25 c26 c27 - cell
 		t3_1 t3_2 t3_3 - tile_3
 		t5_1 t5_2 - tile_5
+		t6_1 - tile_6
 		t9_1 - tile_9
-		ta_1 - tile_a
+		ta_1 ta_2 - tile_a
 		tb_1 - tile_b
 		tc_1 tc_2 - tile_c
 		te_1 - tile_e
-		d1 d2 d3 d4 d5 d6 d7 d8 d9 d10 d11 - debt
+		d1 d2 d3 - debt
 	)
 	(:init
 		(is_above c1 c4)
@@ -66,6 +67,10 @@
 		(has_silver c11)
 		(has_silver c20)
 
+		(has_debt d1)
+		(has_debt d2)
+		(has_debt d3)
+
 		(= (total-cost) 0)
 	)
 	(:goal
@@ -76,14 +81,6 @@
 			(not (has_debt d1))
 			(not (has_debt d2))
 			(not (has_debt d3))
-			(not (has_debt d4))
-			(not (has_debt d5))
-			(not (has_debt d6))
-			(not (has_debt d7))
-			(not (has_debt d8))
-			(not (has_debt d9))
-			(not (has_debt d10))
-			(not (has_debt d11))
 		)
 	)
 	(:metric
