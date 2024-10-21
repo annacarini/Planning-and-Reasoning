@@ -1,39 +1,38 @@
 (define (domain progetto)
-    (:requirements :strips :typing :disjunctive-preconditions :negative-preconditions :action-costs)
+    (:requirements :strips :typing :disjunctive-preconditions :negative-preconditions :action-costs :equality)
 
     (:types
         cell - object
         tile - object
         tile_3 tile_5 tile_6 tile_7 tile_9 tile_a tile_b tile_c tile_d tile_e tile_f - tile
-        token - object
+        debt - object
     )
 
     (:predicates
         ; per creare la griglia
         (is_above ?c1 - cell ?c2 - cell)
-        (is_below ?c1 - cell ?c2 - cell)
         (is_right ?c1 - cell ?c2 - cell)
-        (is_left ?c1 - cell ?c2 - cell)
 
+        ; per indicare se una cella ha un argento
         (has_silver ?c - cell)
-    
 
         ; per indicare quali tile sono gia' state usate
         (used ?t - tile)
 
-        (has_token ?tk - token)
+        ; per indicare se si possiede un debito
+        (has_debt ?d - debt)
 
         ; per ridurre la complessita' delle precondizioni - senza questo predicato non funziona
         (has_tile ?c - cell)
 
+        ; per indicare le proprietà che una tile aggiunge a una cella
         (open_left ?c - cell)
         (open_right ?c - cell)
         (open_above ?c - cell)
         (open_below ?c - cell)
 
+        (started_paying)
 
-        ; per indicare se abbiamo messo la prima tile
-        (first_tile_positioned)
     )
 
     (:functions
@@ -41,9 +40,9 @@
     )
 
 
-    ;############################################### TILE 3 ###############################################
 
-    ; place not on silver
+
+    ;############################################### TILE 3 ###############################################
 
     (:action place_tile_3
         :parameters (?c - cell ?t - tile_3)
@@ -52,8 +51,9 @@
             ; non ci deve essere una tile, in una casella o a dx o a sx ci deve essere o un oro o una tile,
             ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile a dx
             ; deve essere di tipo { 3, 6, 7, a, b, e, f }
+             
+            (not (started_paying))
 
-            (not (has_silver ?c))
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
             
@@ -61,31 +61,26 @@
             (not (has_tile ?c))
             
             ; deve esserci almeno una cella c2 a dx o a sx con un oro o una tile
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                ; oppure c'e' una cella o a dx o a sx che ha una tile, e se ci sono celle a dx o sx con tile
-                ; devono essere tile appropriate
             
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        
-                    )
-                        
-                        
-                )
-                    ; se una cella c2 e' a dx o a sx e ha una tile, deve essere appropriata
+
+            ; oppure c'e' una cella o a dx o a sx che ha una tile, e se ci sono celle a dx o sx con tile
+            ; devono essere tile appropriate
+        
+            (exists (?c2 - cell)
                 
+                (or
+                    (and
+                        (is_right ?c ?c2)
+                        (open_right ?c2)
+                    )
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
+                    )
+                    
+                )
+                    
+                    
             )
 
         )
@@ -99,156 +94,7 @@
             ; t e' usata
             (used ?t)
 
-            (increase (total-cost) 30)
-
-            ; segna che abbiamo messo (almeno) una tile
-            (first_tile_positioned)
-
-        )
-
-    )
-
-    ; place on silver
-
-    (:action place_tile_3_on_silver
-        :parameters (?c - cell ?t - tile_3 ?tk1 ?tk2 ?tk3)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a dx o a sx ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile a dx
-            ; deve essere di tipo { 3, 6, 7, a, b, e, f }
-           
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-            
-
-
-            (has_silver ?c)
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-            
-            ; deve esserci almeno una cella c2 a dx o a sx con un oro o una tile
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                ; oppure c'e' una cella o a dx o a sx che ha una tile, e se ci sono celle a dx o sx con tile
-                ; devono essere tile appropriate
-            
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        
-                    )
-                        
-                        
-                )
-                    ; se una cella c2 e' a dx o a sx e ha una tile, deve essere appropriata
-                
-            )
-
-        )
-
-        :effect (and
-        
-            (has_tile ?c)
-            (open_right ?c)
-            (open_left ?c)
-
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
-
-            ; t e' usata
-            (used ?t)
-
-            (increase (total-cost) 0)
-
-            ; segna che abbiamo messo (almeno) una tile
-            (first_tile_positioned)
-
-        )
-
-    )
-
-    ; place has token 
-
-    (:action place_tile_3_with_token
-        :parameters (?c - cell ?t - tile_3 ?tk)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a dx o a sx ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile a dx
-            ; deve essere di tipo { 3, 6, 7, a, b, e, f }
-           
-            (has_token ?tk)
-            
-            (not (has_silver ?c))
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-            
-            ; deve esserci almeno una cella c2 a dx o a sx con un oro o una tile
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                ; oppure c'e' una cella o a dx o a sx che ha una tile, e se ci sono celle a dx o sx con tile
-                ; devono essere tile appropriate
-            
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        
-                    )
-                        
-                        
-                )
-                    ; se una cella c2 e' a dx o a sx e ha una tile, deve essere appropriata
-                
-            )
-
-        )
-
-        :effect (and
-        
-            (has_tile ?c)
-            (open_right ?c)
-            (open_left ?c)
-
-            (not (has_token ?tk))
-            
-
-            ; t e' usata
-            (used ?t)
-
-            (increase (total-cost) 0)
-
-            ; segna che abbiamo messo (almeno) una tile
-            (first_tile_positioned)
-
+            (increase (total-cost) 6)
         )
 
     )
@@ -266,76 +112,7 @@
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-
-            (not (has_silver ?c))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-               
-                    ; deve esserci almeno una cella c2 a dx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)  
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                    )
-                        
-                        
-                )
-
-              
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_below ?c)
-            (open_right ?c)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 10)
-
-        
-        )
-    )
-
-
-    (:action place_tile_5_on_silver
-        :parameters (?c - cell ?t - tile_5 ?tk1 ?tk2 ?tk3 - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella a dx o sotto ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }
-
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-
-            (has_silver ?c)
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -343,42 +120,30 @@
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-               
-                    ; deve esserci almeno una cella c2 a dx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)  
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
+                ; deve esserci almeno una cella c2 a dx o sotto con un oro o una tile
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)  
                     )
-                        
-                        
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+                    
+                    
                 )
-
-              
+                    
             )
+
+            
         )
 
         :effect (and
             ; c'e' la tile t su c
 
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
-            
             (has_tile ?c)
             (open_below ?c)
             (open_right ?c)
@@ -386,78 +151,10 @@
             ; t e' usata
             (used ?t)
 
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-
-        
-        )
-    )
+            ; segna che la cella e' ok
 
 
-    (:action place_tile_5_with_token
-        :parameters (?c - cell ?t - tile_5 ?tk - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella a dx o sotto ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }
-
-            (not (has_silver ?c))
-            (has_token ?tk)
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-               
-                    ; deve esserci almeno una cella c2 a dx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)  
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                    )
-                        
-                        
-                )
-
-              
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-
-            (not (has_token ?tk))
-            
-            (has_tile ?c)
-            (open_below ?c)
-            (open_right ?c)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-
-        
+            (increase (total-cost) 2)       
         )
     )
 
@@ -473,7 +170,7 @@
             ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }
 
-            (not (has_silver ?c))
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -482,30 +179,24 @@
             (not (has_tile ?c))
             
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                
-                    ; deve esserci almeno una cella c2 a sx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                
-                    (or
-                        (and
-                            (is_left ?c2 ?c)                     
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
+                ; deve esserci almeno una cella c2 a sx o sotto con un oro o una tile
+            (exists (?c2 - cell)
+            
+                (or
+                    (and
+                        (is_right ?c ?c2)                     
+                        (open_right ?c2)
                     )
-                        
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+                    
                 )
-                   
-                
+                    
             )
+
+            
         )
 
         :effect (and
@@ -518,144 +209,7 @@
             ; t e' usata
             (used ?t)
 
-            (first_tile_positioned)
-
-            (increase (total-cost) 10)
-
-            
-        )
-    )
-
-    (:action place_tile_6_on_silver
-        :parameters (?c - cell ?t - tile_6 ?tk1 ?tk2 ?tk3 - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella a sx o sotto ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }
-
-
-            (has_silver ?c)
-
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-            
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                
-                    ; deve esserci almeno una cella c2 a sx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                
-                    (or
-                        (and
-                            (is_left ?c2 ?c)                     
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                    )
-                        
-                )
-                   
-                
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
-            
-            (has_tile ?c)
-            (open_below ?c)
-            (open_left ?c)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-
-            
-        )
-    )
-
-    (:action place_tile_6_with_token
-        :parameters (?c - cell ?t - tile_6 ?tk - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella a sx o sotto ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }
-
-            (not (has_silver ?c))
-            (has_token ?tk)
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-            
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                
-                    ; deve esserci almeno una cella c2 a sx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                
-                    (or
-                        (and
-                            (is_left ?c2 ?c)                     
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                    )
-                        
-                )
-                   
-                
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_below ?c)
-            (open_left ?c)
-
-            (not (has_token ?tk))
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-
+            (increase (total-cost) 2)
             
         )
     )
@@ -663,6 +217,7 @@
 
 
     ;############################################### TILE 7 ###############################################
+
 
     (:action place_tile_7
         :parameters (?c - cell ?t - tile_7)
@@ -673,49 +228,40 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
             ; { 3, 5, 7, 9, b, d, f }
 
+            (not (started_paying))
+
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
 
-            (not (has_silver ?c))
-            
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
-    
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
 
-               
                     ; deve esserci almeno una cella c2 a sx o dx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)     
-                            (open_right ?c2)                     
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                        
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_right ?c ?c2)     
+                        (open_right ?c2)                     
                     )
-                        
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
+                    )
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+
                 )
-                    ; o a sx o dx o sotto ci deve essere un oro o una tile
-                  
+                        
+
             )
         )
 
         :effect (and
             ; c'e' la tile t su c
-            
+
             (has_tile ?c)
             (open_below ?c)
             (open_left ?c)
@@ -724,165 +270,14 @@
             ; t e' usata
             (used ?t)
 
-            (first_tile_positioned)
-
-            (increase (total-cost) 40)
-
-        
-        )
-    )
-
-    (:action place_tile_7_on_silver
-        :parameters (?c - cell ?t - tile_7 ?tk1 ?tk2 ?tk3 - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o dx o sotto ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
-            ; { 3, 5, 7, 9, b, d, f }
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-
-            (has_silver ?c)
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-    
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-               
-                    ; deve esserci almeno una cella c2 a sx o dx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)     
-                            (open_right ?c2)                     
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                        
-                    )
-                        
-                )
-                    ; o a sx o dx o sotto ci deve essere un oro o una tile
-                  
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
-            
-            (has_tile ?c)
-            (open_below ?c)
-            (open_left ?c)
-            (open_right ?c)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-
-        
-        )
-    )
-
-
-    (:action place_tile_7_with_token
-        :parameters (?c - cell ?t - tile_7 ?tk - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o dx o sotto ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
-            ; { 3, 5, 7, 9, b, d, f }
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-
-            (not (has_silver ?c))
-
-            (has_token ?tk)
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-    
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-               
-                    ; deve esserci almeno una cella c2 a sx o dx o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)     
-                            (open_right ?c2)                     
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                        
-                    )
-                        
-                )
-                    ; o a sx o dx o sotto ci deve essere un oro o una tile
-                  
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-
-            (not (has_token ?tk))
-            
-            (has_tile ?c)
-            (open_below ?c)
-            (open_left ?c)
-            (open_right ?c)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-
-        
+            (increase (total-cost) 8)
         )
     )
 
 
     
     ;############################################### TILE 9 ###############################################
+
 
     (:action place_tile_9
         :parameters (?c - cell ?t - tile_9)
@@ -892,118 +287,37 @@
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sopra
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
-            (not (has_silver ?c))
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
+
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
-            
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                
                     ; deve esserci almeno una cella c2 a dx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
+            (exists (?c2 - cell)
+                
+                (or
 
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
+                    )
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
                     )
                     
                 )
-                    ; o a dx o sopra ci deve essere un oro o una tile
-                   
                 
             )
+
         )
 
         :effect (and
             ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_above ?c)
-            (open_right ?c)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 10)
-        
-            
-        )
-    )
-
-
-    (:action place_tile_9_on_silver
-        :parameters (?c - cell ?t - tile_9 ?tk1 ?tk2 ?tk3 - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a dx o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sopra
-            ; deve essere: { 5, 6, 7, c, d, e, f }
-
-
-            (has_silver ?c)
-
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-            
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                
-                    ; deve esserci almeno una cella c2 a dx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
-                    )
-                    
-                )
-                    ; o a dx o sopra ci deve essere un oro o una tile
-                   
-                
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
 
             (has_tile ?c)
             (open_above ?c)
@@ -1012,81 +326,7 @@
             ; t e' usata
             (used ?t)
 
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
-            
-        )
-    )
-
-
-
-    (:action place_tile_9_with_token
-        :parameters (?c - cell ?t - tile_9 ?tk - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a dx o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sopra
-            ; deve essere: { 5, 6, 7, c, d, e, f }
-
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-
-            (not (has_silver ?c))
-
-            (has_token ?tk)
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-            
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                
-                    ; deve esserci almeno una cella c2 a dx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
-                    )
-                    
-                )
-                    ; o a dx o sopra ci deve essere un oro o una tile
-                   
-                
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-
-            (not (has_token ?tk))
-            
-            (has_tile ?c)
-            (open_above ?c)
-            (open_right ?c)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
-            
+            (increase (total-cost) 2)
         )
     )
 
@@ -1102,7 +342,7 @@
             ; e se c'e' una tile a sx deve essere di tipo:
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
-            (not (has_silver ?c))
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1110,31 +350,24 @@
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                
                     ; deve esserci almeno una cella c2 a sx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
-                    )
-                        
-                )
-                    ; o a sx o sopra ci deve essere un oro o una tile
-                    
+            (exists (?c2 - cell)
                 
+                (or
+                    (and
+                        (is_right ?c ?c2)
+                        (open_right ?c2)
+                    )
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
+                    )
+                    
+                )
+                    
             )
+
+            
         )
 
         :effect (and
@@ -1147,149 +380,9 @@
             ; t e' usata
             (used ?t)
 
-            (first_tile_positioned)
-
-            (increase (total-cost) 10)
-
-            
-        )
-    )
-
-    (:action place_tile_a_on_silver
-        :parameters (?c - cell ?t - tile_a ?tk1 ?tk2 ?tk3 - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a sx deve essere di tipo:
-            ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-
-            (has_silver ?c)
-
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                
-                    ; deve esserci almeno una cella c2 a sx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
-                    )
-                        
-                )
-                    ; o a sx o sopra ci deve essere un oro o una tile
-                    
-                
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_above ?c)
-            (open_left ?c)
-
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-
-            
-        )
-    )
-
-
-    (:action place_tile_a_with_token
-        :parameters (?c - cell ?t - tile_a ?tk - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a sx deve essere di tipo:
-            ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-
-            (not (has_silver ?c))
-
-            (has_token ?tk)
-
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-
-                
-                    ; deve esserci almeno una cella c2 a sx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
-                    )
-                        
-                )
-                    ; o a sx o sopra ci deve essere un oro o una tile
-                    
-                
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_above ?c)
-            (open_left ?c)
-
-            (not (has_token ?tk))
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-
-            
+            ; segna che la cella e' ok
+              
+            (increase (total-cost) 2)
         )
     )
 
@@ -1297,6 +390,7 @@
 
     
     ;############################################### TILE B ###############################################
+
 
     (:action place_tile_b
         :parameters (?c - cell ?t - tile_b)
@@ -1306,42 +400,35 @@
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile a sx deve essere
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
+            (not (started_paying))
+
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
 
-            (not (has_silver ?c))
             
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-               
                     ; deve esserci almeno una cella c2 a sx o dx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
-                            
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_right ?c ?c2)
+                        (open_right ?c2)
                     )
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
+                    )
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
+                    )
+                    
                         
                 )
-                    ; o a sx o dx o sopra ci deve essere un oro o una tile
-                   
+
             )
         )
 
@@ -1355,156 +442,8 @@
 
             ; t e' usata
             (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 40)
-        
-           
-        )
-    )
-
-    (:action place_tile_b_on_silver
-        :parameters (?c - cell ?t - tile_b ?tk1 ?tk2 ?tk3 - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o dx o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile a sx deve essere
-            ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-
-            (has_silver ?c)
-
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-               
-                    ; deve esserci almeno una cella c2 a sx o dx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
-                            
-                    )
-                        
-                )
-                    ; o a sx o dx o sopra ci deve essere un oro o una tile
-                   
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_left ?c)
-            (open_right ?c)
-            (open_above ?c)
-
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
-           
-        )
-    )
-
-
-    (:action place_tile_b_with_token
-        :parameters (?c - cell ?t - tile_b ?tk - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o dx o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile a sx deve essere
-            ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-
-            (not (has_silver ?c))
-
-            (has_token ?tk)
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-               
-                    ; deve esserci almeno una cella c2 a sx o dx o sopra con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        
-                            
-                    )
-                        
-                )
-                    ; o a sx o dx o sopra ci deve essere un oro o una tile
-                   
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_left ?c)
-            (open_right ?c)
-            (open_above ?c)
-
-            (not (has_token ?tk))
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
+              
+            (increase (total-cost) 8)
            
         )
     )
@@ -1522,8 +461,7 @@
             ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra
             ; deve essere: { 5, 6, 7, c, d, e, f }
 
-
-            (not (has_silver ?c))
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -1531,31 +469,26 @@
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-               
+    
                     ; deve esserci almeno una cella sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
                     )
-                        
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+                    
+                    
                 )
-                    ; su ogni cella o sotto o sopra ci deve essere un oro o una tile appropriata
                     
             )
+
+            
         )
 
         :effect (and
@@ -1568,146 +501,7 @@
             ; t e' usata
             (used ?t)
 
-            (first_tile_positioned)
-
-            (increase (total-cost) 30)
-        
-            
-        )
-    )
-
-    (:action place_tile_c_on_silver
-        :parameters (?c - cell ?t - tile_c ?tk1 ?tk2 ?tk3 - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra
-            ; deve essere: { 5, 6, 7, c, d, e, f }
-
-            (has_silver ?c)
-
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-               
-                    ; deve esserci almeno una cella sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                    )
-                        
-                )
-                    ; su ogni cella o sotto o sopra ci deve essere un oro o una tile appropriata
-                    
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_above ?c)
-            (open_below ?c)
-
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
-            
-        )
-    )
-
-
-    (:action place_tile_c_with_token
-        :parameters (?c - cell ?t - tile_c ?tk - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra
-            ; deve essere: { 5, 6, 7, c, d, e, f }
-
-            (not (has_silver ?c))
-
-            (has_token ?tk)
-
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-               
-                    ; deve esserci almeno una cella sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                    )
-                        
-                )
-                    ; su ogni cella o sotto o sopra ci deve essere un oro o una tile appropriata
-                    
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_above ?c)
-            (open_below ?c)
-
-            (not (has_token ?tk))
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
+            (increase (total-cost) 6)
             
         )
     )
@@ -1715,6 +509,7 @@
 
     
     ;############################################### TILE D ###############################################
+
 
     (:action place_tile_d
         :parameters (?c - cell ?t - tile_d)
@@ -1724,43 +519,34 @@
             ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
-            (not (has_silver ?c))
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
-            
+
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-                
                     ; deve esserci almeno una cella a dx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
                     )
-                            
-                )
-                    ; o a dx o sotto o sopra ci deve essere un oro o una tile
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
+                    )
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
                     
-                       
+                    
+                )
+
             )
         )
 
@@ -1775,158 +561,7 @@
             ; t e' usata
             (used ?t)
 
-            (first_tile_positioned)
-
-            (increase (total-cost) 40)
-        
-           
-        )
-    )
-
-    (:action place_tile_d_on_silver
-        :parameters (?c - cell ?t - tile_d ?tk1 ?tk2 ?tk3 - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a dx o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-
-            (has_silver ?c)
-
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-                
-                    ; deve esserci almeno una cella a dx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                    )
-                            
-                )
-                    ; o a dx o sotto o sopra ci deve essere un oro o una tile
-                    
-                       
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
-            
-            (has_tile ?c)
-            (open_below ?c)
-            (open_above ?c)
-            (open_right ?c)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
-           
-        )
-    )
-
-
-    (:action place_tile_d_with_token
-        :parameters (?c - cell ?t - tile_d ?tk - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a dx o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-            (not (has_silver ?c))
-
-            (has_token ?tk)
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-                
-                    ; deve esserci almeno una cella a dx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                    )
-                            
-                )
-                    ; o a dx o sotto o sopra ci deve essere un oro o una tile
-                    
-                       
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_below ?c)
-            (open_above ?c)
-            (open_right ?c)
-
-            (not (has_token ?tk))
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
+            (increase (total-cost) 8)
            
         )
     )
@@ -1936,7 +571,6 @@
     ;############################################### TILE E ###############################################
 
     
-
     (:action place_tile_e
         :parameters (?c - cell ?t - tile_e)
         
@@ -1945,46 +579,33 @@
             ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere
             ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
-
-            (not (has_silver ?c))
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
-            
+
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-                
                 ; deve esserci almeno una cella a sx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                        
+            (exists (?c2 - cell)
+                
+                (or
+                    (and
+                        (is_right ?c ?c2)
+                        (open_right ?c2)
                     )
-                            
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
+                    )
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+
                 )
 
-                    ; o a sx o dx o sotto o sopra ci deve essere un oro o una tile
-                   
             )
         )
 
@@ -1999,163 +620,9 @@
             ; t e' usata
             (used ?t)
 
-            (first_tile_positioned)
-
-            (increase (total-cost) 40)
-        
-            
-        )
-    )
-
-
-    (:action place_tile_e_on_silver
-        :parameters (?c - cell ?t - tile_e ?tk1 ?tk2 ?tk3 - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere
-            ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-
-            (has_silver ?c)
-
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-                
-                ; deve esserci almeno una cella a sx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                        
-                    )
-                            
-                )
-
-                    ; o a sx o dx o sotto o sopra ci deve essere un oro o una tile
-                   
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_left ?c)
-            (open_above ?c)
-            (open_below ?c)
-
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
-            
-        )
-    )
-
-    (:action place_tile_e_with_token
-        :parameters (?c - cell ?t - tile_e ?tk - token)
-        
-        :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere
-            ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-
-            (not (has_silver ?c))
-
-            (has_token ?tk)
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-                
-                ; deve esserci almeno una cella a sx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                    
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                        
-                    )
-                            
-                )
-
-                    ; o a sx o dx o sotto o sopra ci deve essere un oro o una tile
-                   
-            )
-        )
-
-        :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_left ?c)
-            (open_above ?c)
-            (open_below ?c)
-
-            (not (has_token ?tk))
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
+            ; segna che la cella e' ok
+              
+            (increase (total-cost) 8)   
             
         )
     )
@@ -2164,6 +631,7 @@
 
     
     ;############################################### TILE F ###############################################
+
 
     (:action place_tile_f
         :parameters (?c - cell ?t - tile_f)
@@ -2174,9 +642,7 @@
             ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
             ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
-            ; t deve essere una tile_f
-            
-            (not (has_silver ?c))
+            (not (started_paying))
 
             ; t non deve essere gia' stata utilizzata
             (not (used ?t))
@@ -2184,38 +650,30 @@
             ; non ci deve essere una tile su c
             (not (has_tile ?c))
 
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-                
                     ; deve esserci almeno una cella a sx o dx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
+            (exists (?c2 - cell)
+            
+                (or
+                    (and
+                        (is_right ?c ?c2)
+                        (open_right ?c2)
                     )
+                    (and
+                        (is_right ?c2 ?c)
+                        (open_left ?c2)
+                    )
+                    (and
+                        (is_above ?c2 ?c)
+                        (open_below ?c2)
+                    )
+                    (and
+                        (is_above ?c ?c2)
+                        (open_above ?c2)
+                    )
+
                             
                 )
-                ; o a sx o dx o sotto o sopra ci deve essere un oro o una tile
+
                    
             )
         )
@@ -2232,180 +690,49 @@
             ; t e' usata
             (used ?t)
 
-            (first_tile_positioned)
+            (increase (total-cost) 15)
 
-            (increase (total-cost) 75)
-        
-        
         )
     )
 
-    (:action place_tile_f_on_silver
-        :parameters (?c - cell ?t - tile_f ?tk1 ?tk2 ?tk3 - token)
+
+    ;############################################### ALTRO ###############################################
+
+
+    (:action take_silver
+        :parameters (?c - cell ?d - debt)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o dx o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
-            ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-            ; t deve essere una tile_f
-
             (has_silver ?c)
+            (has_tile ?c)
+            (has_debt ?d)
 
-            (not (has_token ?tk1))
-            (not (has_token ?tk2))
-            (not (has_token ?tk3))
-            
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-                
-                    ; deve esserci almeno una cella a sx o dx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                    )
-                            
-                )
-                ; o a sx o dx o sotto o sopra ci deve essere un oro o una tile
-                   
-            )
         )
 
         :effect (and
-            ; c'e' la tile t su c
+            ; hai preso l'argento e i token
+            (not (has_silver ?c))
+            (not  (has_debt ?d))
             
-            (has_tile ?c)
-            (open_above ?c)
-            (open_below ?c)
-            (open_left ?c)
-            (open_right ?c)
-
-            (has_token ?tk1)
-            (has_token ?tk2)
-            (has_token ?tk3)
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
-        
+            (started_paying)
+              
         )
     )
 
-
-    (:action place_tile_f_with_token
-        :parameters (?c - cell ?t - tile_f ?tk - token)
+    (:action pay_debt
+        :parameters (?d - debt)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o dx o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
-            ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
-
-            ; t deve essere una tile_f
-            
-            (not (has_silver ?c))
-
-            (has_token ?tk)
-
-            ; t non deve essere gia' stata utilizzata
-            (not (used ?t))
-            
-            ; non ci deve essere una tile su c
-            (not (has_tile ?c))
-
-
-            (or
-                ; o non abbiamo ancora messo nessuna tile
-                (not (first_tile_positioned))
-            
-                
-                    ; deve esserci almeno una cella a sx o dx o sopra o sotto con un oro o una tile
-                (exists (?c2 - cell)
-                
-                    (or
-                        (and
-                            (is_left ?c2 ?c)
-                            (open_right ?c2)
-                        )
-                        (and
-                            (is_right ?c2 ?c)
-                            (open_left ?c2)
-                        )
-                        (and
-                            (is_above ?c2 ?c)
-                            (open_below ?c2)
-                        )
-                        (and
-                            (is_below ?c2 ?c)
-                            (open_above ?c2)
-                        )
-                        
-                        
-                    )
-                            
-                )
-                ; o a sx o dx o sotto o sopra ci deve essere un oro o una tile
-                   
-            )
+                (has_debt ?d)
         )
 
         :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_above ?c)
-            (open_below ?c)
-            (open_left ?c)
-            (open_right ?c)
+            (not (has_debt ?d))
 
-            (not (has_token ?tk))
-
-            ; t e' usata
-            (used ?t)
-
-            (first_tile_positioned)
-
-            (increase (total-cost) 0)
-        
-        
+            (started_paying)
+              
+            (increase (total-cost) 15)
         )
     )
-
-
-
-
 
 )
