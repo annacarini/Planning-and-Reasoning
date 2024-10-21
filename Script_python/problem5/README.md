@@ -116,7 +116,7 @@ Plan obtained using **A\* (with reopening)** as search algorithm, and **lmcut** 
 | **Plan cost** | 40 |
 | **Generated states** | 395109132 |
 
-Expanded 19950962 state(s).
+	Expanded 19950962 state(s).
 	Reopened 0 state(s).
 	Evaluated 28149786 state(s).
 	Evaluations: 28149786
