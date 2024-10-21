@@ -35,6 +35,8 @@
 
 Plan obtained using **A\* (without reopening)** as search algorithm, and **hmax** as heuristic.
 
+<img src="problem5_sas_plan_hmax.png" alt="plan" width="300"/>
+
 | | |
 |--|--|
 | **Total time** | 1638.26s |
@@ -56,6 +58,8 @@ Plan obtained using **A\* (without reopening)** as search algorithm, and **hmax*
 ### FF, A* (no reopening)
 
 Plan obtained using **A\* (without reopening)** as search algorithm, and **ff** as heuristic.
+
+<img src="problem5_sas_plan_ff.png" alt="plan" width="300"/>
 
 | | |
 |--|--|
@@ -79,6 +83,8 @@ Plan obtained using **A\* (without reopening)** as search algorithm, and **ff** 
 
 Plan obtained using **greedy search (without reopening)** as search algorithm, and **ff** as heuristic.
 
+<img src="problem5_sas_plan_ff_greedy.png" alt="plan" width="300"/>
+
 | | |
 |--|--|
 | **Total time** | 0.0292772s |
@@ -100,6 +106,8 @@ Plan obtained using **greedy search (without reopening)** as search algorithm, a
   ### LMCUT, A* (reopening)
 
 Plan obtained using **A\* (with reopening)** as search algorithm, and **lmcut** as heuristic.
+
+<img src="problem5_sas_plan_lmcut.png" alt="plan" width="300"/>
 
 | | |
 |--|--|
