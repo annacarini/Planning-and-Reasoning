@@ -14,7 +14,7 @@
 	prob.setTilesB(1)
 	prob.setTilesC(2)
 	prob.setTilesD(1)
-	#prob.setTilesE(1)
+	prob.setTilesE(0)
 	prob.setTilesF(1)
 
 	# golds
