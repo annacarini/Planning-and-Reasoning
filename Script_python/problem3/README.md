@@ -30,6 +30,35 @@
 	prob.generateProblemFile()
 	prob.generateInputForDrawing()
 
+## LAMA
+
+We ran **LAMA-2011** and we obtained 6 plans, of progressively smaller costs. The first and last one are shown here:
+
+<img src=" " alt="plan" width="220"/> |  <img src=" " alt="plan" width="220"/>
+:-------------------------:|:-------------------------:
+Plan 1  |  Plan 6
+
+Information about all the generated plans:
+
+| Plan | Search time | Plan cost |  Expanded states | Generated states |
+|--|--|--|--|--|
+| 1 | 0.00215283s | 50 | 10 | 237 |
+| 2 | 0.00305138s | 46 | 47 | 545 |
+| 3 | 0.00964877s | 41 | 223 | 1935 |
+| 4 | 0.015118s | 37 | 353 | 2924 |
+| 5 | 0.34782s | 35 | 8512 | 88088 |
+| 6 | 400.911s | 34 | 7907469 | 97330454 |
+| FINISH | 677.94s | - | 7833192 | 122153293 |
+
+| | |
+|--|--|
+| **Total time** | 1080.17s |
+| **Peak memory** | 1846604 KB |
+
+	run with:  --search-memory-limit 11G --alias seq-sat-lama-2011
+
+## Other tests
+
 ### HMAX, A* (no reopening)
 
 Plan obtained using **A\* (without reopening)** as search algorithm, and **hmax** as heuristic.
