@@ -59,6 +59,8 @@ Information about all the generated plans:
 
 	run with:  --search-memory-limit 11G --alias seq-sat-lama-2011
 
+## Other tests
+
 ### HMAX, A* (no reopening)
 
 Plan obtained using **A\* (without reopening)** as search algorithm, and **hmax** as heuristic.
