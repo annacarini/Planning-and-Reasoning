@@ -33,8 +33,13 @@
 
 ## LAMA
 
-We obtained 7 plans, of progressively smaller costs, running **LAMA-2011**. The first and last one are shown here:
+We ran **LAMA-2011** and we obtained 7 plans, of progressively smaller costs. The first and last one are shown here:
 
+<img src="problem1_sas_plan1.png" alt="plan" width="220"/> |  <img src="problem1_sas_plan7.png" alt="plan" width="220"/>
+:-------------------------:|:-------------------------:
+Plan 1  |  Plan 7
+
+Information about all the generated plans:
 
 | Plan | Search time | Plan cost |  Expanded states | Generated states |
 |--|--|--|--|--|
