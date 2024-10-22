@@ -1,0 +1,36 @@
+
+-------- HMAX --------
+
+time = 1850s
+memory = 4.4G
+expanded nodes = 14 mln
+
+-------- FF --------
+
+time = 780s
+memory = 1.2G
+expanded nodes = 2.4 mln
+
+-------- LMCUT --------
+
+time = 770s
+memory = 1.2G
+expanded nodes = 2.5 mln
+
+
+-------- FF GREEDY --------
+
+time = Total time: 0.114276s
+memory = 11872 KB
+
+Expanded 2494 state(s).
+[t=0.114276s, 11872 KB] Reopened 0 state(s).
+[t=0.114276s, 11872 KB] Evaluated 2501 state(s).
+[t=0.114276s, 11872 KB] Evaluations: 2501
+[t=0.114276s, 11872 KB] Generated 24924 state(s).
+[t=0.114276s, 11872 KB] Dead ends: 6 state(s).
+[t=0.114276s, 11872 KB] Number of registered states: 2501
+
+Plan cost: 50
+
+
