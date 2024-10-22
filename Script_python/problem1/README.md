@@ -74,7 +74,7 @@ Plan obtained using **greedy search (without reopening)** as search algorithm, a
 | **Total time** | 0.0314195s |
 | **Peak memory** | 11872 KB |
 | **Plan cost** | 73 |
-| **Generated states** | 4071 |
+| **Generated states** | 3797 |
 	
 	Expanded 510 state(s).
 	Reopened 0 state(s).
