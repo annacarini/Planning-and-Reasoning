@@ -9,28 +9,29 @@
     )
 
     (:predicates
-        ; per creare la griglia
+        ; to structure the cells into a grid
         (is_above ?c1 - cell ?c2 - cell)
         (is_right ?c1 - cell ?c2 - cell)
 
-        ; per indicare se una cella ha un argento
+        ; to know whether a cell has a silver
         (has_silver ?c - cell)
 
-        ; per indicare quali tile sono gia' state usate
+        ; to avoid using the same tile twice
         (used ?t - tile)
 
-        ; per indicare se si possiede un debito
+        ; to indicate that the agent has a debt
         (has_debt ?d - debt)
 
-        ; per ridurre la complessita' delle precondizioni - senza questo predicato non funziona
+        ; to know whether a cell has a tile placed on it
         (has_tile ?c - cell)
 
-        ; per indicare le proprietà che una tile aggiunge a una cella
+        ; to know the type of tile placed on a cell
         (open_left ?c - cell)
         (open_right ?c - cell)
         (open_above ?c - cell)
         (open_below ?c - cell)
 
+        ; to force the agent to only pay the debts at the end
         (started_paying)
 
     )
@@ -44,115 +45,106 @@
 
     ;############################################### TILE 3 ###############################################
 
+    ;  SHAPE:
+    ;
+    ;  _____
+    ; |_____|
+    ;
+
     (:action place_tile_3
         :parameters (?c - cell ?t - tile_3)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella o a dx o a sx ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile a dx
-            ; deve essere di tipo { 3, 6, 7, a, b, e, f }
-             
+
+            ; the agent must not have paid any debt yet
             (not (started_paying))
 
-            ; t non deve essere gia' stata utilizzata
+            ; t must not have been used yet
             (not (used ?t))
             
-            ; non ci deve essere una tile su c
+            ; cell c must not have a tile on it
             (not (has_tile ?c))
             
-            ; deve esserci almeno una cella c2 a dx o a sx con un oro o una tile
-            
-
-            ; oppure c'e' una cella o a dx o a sx che ha una tile, e se ci sono celle a dx o sx con tile
-            ; devono essere tile appropriate
-        
+            ; there must be a cell c2 on the left or on the right with an appropriate tile
             (exists (?c2 - cell)
-                
                 (or
                     (and
+                        ; c2 is on the left and it connects toward its right
                         (is_right ?c ?c2)
                         (open_right ?c2)
                     )
                     (and
+                        ; c2 is on the right and it connects toward its left
                         (is_right ?c2 ?c)
                         (open_left ?c2)
-                    )
-                    
-                )
-                    
-                    
+                    )   
+                )       
             )
-
         )
 
         :effect (and
         
+            ; cell c has tile t, that is not available anymore
             (has_tile ?c)
+            (used ?t)
+
+            ; cell c can connect with cells to its left and its right
             (open_right ?c)
             (open_left ?c)
 
-            ; t e' usata
-            (used ?t)
-
             (increase (total-cost) 6)
         )
-
     )
 
     
 
-
     ;############################################### TILE 5 ###############################################
+
+    ;  SHAPE:  
+    ;
+    ;    ___
+    ;   |  _|
+    ;   |_|
 
     (:action place_tile_5
         :parameters (?c - cell ?t - tile_5)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella a dx o sotto ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }
 
+            ; the agent must not have paid any debt yet
             (not (started_paying))
 
-            ; t non deve essere gia' stata utilizzata
+            ; t must not have been used yet
             (not (used ?t))
             
-            ; non ci deve essere una tile su c
+            ; cell c must not have a tile on it
             (not (has_tile ?c))
 
-                ; deve esserci almeno una cella c2 a dx o sotto con un oro o una tile
+            ; there must be a cell c2 on the right or below with an appropriate tile
             (exists (?c2 - cell)
-                
                 (or
                     (and
+                        ; c2 is on the right and it connects toward its left
                         (is_right ?c2 ?c)
                         (open_left ?c2)  
                     )
                     (and
+                        ; c2 is below and it connects toward above
                         (is_above ?c ?c2)
                         (open_above ?c2)
                     )
-                    
-                    
                 )
-                    
             )
-
-            
         )
 
         :effect (and
-            ; c'e' la tile t su c
-
+            ; cell c has tile t, that is not available anymore
             (has_tile ?c)
-            (open_below ?c)
-            (open_right ?c)
-
-            ; t e' usata
             (used ?t)
 
-            ; segna che la cella e' ok
-
+            ; cell c can connect with cells to its right and below
+            (open_below ?c)
+            (open_right ?c)
 
             (increase (total-cost) 2)       
         )
@@ -162,55 +154,54 @@
 
     ;############################################### TILE 6 ###############################################
 
+    ;  SHAPE:
+    ;  
+    ;  ___
+    ; |_  |
+    ;   |_|
+
     (:action place_tile_6
         :parameters (?c - cell ?t - tile_6)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella a sx o sotto ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a sx deve essere di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }
 
+            ; the agent must not have paid any debt yet
             (not (started_paying))
 
-            ; t non deve essere gia' stata utilizzata
+            ; t must not have been used yet
             (not (used ?t))
             
-            ; non ci deve essere una tile su c
+            ; cell c must not have a tile on it
             (not (has_tile ?c))
             
-
-                ; deve esserci almeno una cella c2 a sx o sotto con un oro o una tile
+            ; there must be a cell c2 on the left or below with an appropriate tile
             (exists (?c2 - cell)
-            
                 (or
                     (and
+                        ; c2 is on the left and it connects toward its right
                         (is_right ?c ?c2)                     
                         (open_right ?c2)
                     )
                     (and
+                        ; c2 is below and it connects toward above
                         (is_above ?c ?c2)
                         (open_above ?c2)
                     )
-                    
                 )
-                    
             )
-
-            
         )
 
         :effect (and
-            ; c'e' la tile t su c
-            
+
+            ; cell c has tile t, that is not available anymore
             (has_tile ?c)
+            (used ?t)
+
+            ; cell c can connect with cells to its left and below
             (open_below ?c)
             (open_left ?c)
 
-            ; t e' usata
-            (used ?t)
-
             (increase (total-cost) 2)
-            
         )
     )
 
@@ -218,57 +209,58 @@
 
     ;############################################### TILE 7 ###############################################
 
+    ;  SHAPE:
+    ;
+    ;  _____
+    ; |_   _|
+    ;   |_|
 
     (:action place_tile_7
         :parameters (?c - cell ?t - tile_7)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o dx o sotto ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
-            ; { 3, 5, 7, 9, b, d, f }
 
+            ; the agent must not have paid any debt yet
             (not (started_paying))
 
-            ; t non deve essere gia' stata utilizzata
+            ; t must not have been used yet
             (not (used ?t))
-
-            ; non ci deve essere una tile su c
+            
+            ; cell c must not have a tile on it
             (not (has_tile ?c))
 
-                    ; deve esserci almeno una cella c2 a sx o dx o sotto con un oro o una tile
+            ; there must be a cell c2 on the left or on the right or below with an appropriate tile
             (exists (?c2 - cell)
-                
                 (or
+                    ; c2 is on the left and it connects toward its right
                     (and
                         (is_right ?c ?c2)     
                         (open_right ?c2)                     
                     )
+                    ; c2 is on the right and it connects toward its left
                     (and
                         (is_right ?c2 ?c)
                         (open_left ?c2)
                     )
+                    ; c2 is below and it connects toward above
                     (and
                         (is_above ?c ?c2)
                         (open_above ?c2)
                     )
-
                 )
-                        
-
             )
         )
 
         :effect (and
-            ; c'e' la tile t su c
 
+            ; cell c has tile t, that is not available anymore
             (has_tile ?c)
+            (used ?t)
+
+            ; cell c can connect with cells to its left, right and below
             (open_below ?c)
             (open_left ?c)
             (open_right ?c)
-
-            ; t e' usata
-            (used ?t)
 
             (increase (total-cost) 8)
         )
@@ -278,53 +270,52 @@
     
     ;############################################### TILE 9 ###############################################
 
+    ;  SHAPE:
+    ;    _
+    ;   | |_
+    ;   |___|
+    ;
 
     (:action place_tile_9
         :parameters (?c - cell ?t - tile_9)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella o a dx o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sopra
-            ; deve essere: { 5, 6, 7, c, d, e, f }
 
+            ; the agent must not have paid any debt yet
             (not (started_paying))
 
-            ; t non deve essere gia' stata utilizzata
+            ; t must not have been used yet
             (not (used ?t))
-
             
-            ; non ci deve essere una tile su c
+            ; cell c must not have a tile on it
             (not (has_tile ?c))
 
-                    ; deve esserci almeno una cella c2 a dx o sopra con un oro o una tile
+            ; there must be a cell c2 on the right or above with an appropriate tile
             (exists (?c2 - cell)
-                
                 (or
-
+                    ; c2 is on the right and it connects toward its left
                     (and
                         (is_right ?c2 ?c)
                         (open_left ?c2)
                     )
+                    ; c2 is above and it connects toward below
                     (and
                         (is_above ?c2 ?c)
                         (open_below ?c2)
                     )
-                    
                 )
-                
             )
-
         )
 
         :effect (and
-            ; c'e' la tile t su c
 
+            ; cell c has tile t, that is not available anymore
             (has_tile ?c)
+            (used ?t)
+
+            ; cell c can connect with cells to its right and above
             (open_above ?c)
             (open_right ?c)
-
-            ; t e' usata
-            (used ?t)
 
             (increase (total-cost) 2)
         )
@@ -334,175 +325,171 @@
     
     ;############################################### TILE A ###############################################
 
+    ;  SHAPE:
+    ;    _
+    ;  _| |
+    ; |___|
+    ;
+
     (:action place_tile_a
         :parameters (?c - cell ?t - tile_a)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a sx deve essere di tipo:
-            ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
+            ; the agent must not have paid any debt yet
             (not (started_paying))
 
-            ; t non deve essere gia' stata utilizzata
+            ; t must not have been used yet
             (not (used ?t))
             
-            ; non ci deve essere una tile su c
+            ; cell c must not have a tile on it
             (not (has_tile ?c))
 
-                    ; deve esserci almeno una cella c2 a sx o sopra con un oro o una tile
+            ; there must be a cell c2 on the left or above with an appropriate tile
             (exists (?c2 - cell)
                 
                 (or
+                    ; c2 is on the left and it connects toward its right
                     (and
                         (is_right ?c ?c2)
                         (open_right ?c2)
                     )
+                    ; c2 is above and it connects toward below
                     (and
                         (is_above ?c2 ?c)
                         (open_below ?c2)
                     )
-                    
                 )
-                    
             )
-
-            
         )
 
         :effect (and
-            ; c'e' la tile t su c
-            
-            (has_tile ?c)
-            (open_above ?c)
-            (open_left ?c)
 
-            ; t e' usata
+            ; cell c has tile t, that is not available anymore
+            (has_tile ?c)
             (used ?t)
 
-            ; segna che la cella e' ok
-              
+            ; cell c can connect with cells to its left and above
+            (open_above ?c)
+            (open_left ?c)
+    
             (increase (total-cost) 2)
         )
     )
 
 
-
     
     ;############################################### TILE B ###############################################
 
+    ;  SHAPE:
+    ;    _
+    ;  _| |_
+    ; |_____|
+    ;
 
     (:action place_tile_b
         :parameters (?c - cell ?t - tile_b)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o dx o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile a sx deve essere
-            ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
+            ; the agent must not have paid any debt yet
             (not (started_paying))
 
-            ; t non deve essere gia' stata utilizzata
+            ; t must not have been used yet
             (not (used ?t))
-
             
-            ; non ci deve essere una tile su c
+            ; cell c must not have a tile on it
             (not (has_tile ?c))
 
-                    ; deve esserci almeno una cella c2 a sx o dx o sopra con un oro o una tile
+            ; there must be a cell c2 on the left or on the right or above with an appropriate tile
             (exists (?c2 - cell)
-                
                 (or
+                    ; c2 is on the left and it connects toward its right
                     (and
                         (is_right ?c ?c2)
                         (open_right ?c2)
                     )
+                    ; c2 is on the right and it connects toward its left
                     (and
                         (is_right ?c2 ?c)
                         (open_left ?c2)
                     )
+                    ; c2 is above and it connects toward below
                     (and
                         (is_above ?c2 ?c)
                         (open_below ?c2)
                     )
-                    
-                        
                 )
-
             )
         )
 
         :effect (and
-            ; c'e' la tile t su c
-            
+
+            ; cell c has tile t, that is not available anymore
             (has_tile ?c)
+            (used ?t)
+
+            ; cell c can connect with cells to its left, right and above
             (open_left ?c)
             (open_right ?c)
             (open_above ?c)
 
-            ; t e' usata
-            (used ?t)
-              
             (increase (total-cost) 8)
-           
         )
     )
-
 
 
     
     ;############################################### TILE C ###############################################
 
+    ;  SHAPE:
+    ;    _
+    ;   | |
+    ;   | |
+    ;   |_|
+
     (:action place_tile_c
         :parameters (?c - cell ?t - tile_c)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra
-            ; deve essere: { 5, 6, 7, c, d, e, f }
 
+            ; the agent must not have paid any debt yet
             (not (started_paying))
 
-            ; t non deve essere gia' stata utilizzata
+            ; t must not have been used yet
             (not (used ?t))
             
-            ; non ci deve essere una tile su c
+            ; cell c must not have a tile on it
             (not (has_tile ?c))
 
-    
-                    ; deve esserci almeno una cella sopra o sotto con un oro o una tile
+            ; there must be a cell c2 above or below with an appropriate tile
             (exists (?c2 - cell)
-                
                 (or
+                    ; c2 is above and it connects toward below
                     (and
                         (is_above ?c2 ?c)
                         (open_below ?c2)
                     )
+                    ; c2 is bellw and it connects toward above
                     (and
                         (is_above ?c ?c2)
                         (open_above ?c2)
-                    )
-                    
-                    
+                    )   
                 )
-                    
             )
-
-            
         )
 
         :effect (and
-            ; c'e' la tile t su c
-            
+
+            ; cell c has tile t, that is not available anymore
             (has_tile ?c)
+            (used ?t)
+
+            ; cell c can connect with cells above and below
             (open_above ?c)
             (open_below ?c)
 
-            ; t e' usata
-            (used ?t)
-
             (increase (total-cost) 6)
-            
         )
     )
 
@@ -510,59 +497,60 @@
     
     ;############################################### TILE D ###############################################
 
+    ;  SHAPE:
+    ;    _
+    ;   | |_
+    ;   |  _|
+    ;   |_|
 
     (:action place_tile_d
         :parameters (?c - cell ?t - tile_d)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella o a dx o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
+            ; the agent must not have paid any debt yet
             (not (started_paying))
 
-            ; t non deve essere gia' stata utilizzata
+            ; t must not have been used yet
             (not (used ?t))
-
-            ; non ci deve essere una tile su c
+            
+            ; cell c must not have a tile on it
             (not (has_tile ?c))
 
-                    ; deve esserci almeno una cella a dx o sopra o sotto con un oro o una tile
+            ; there must be a cell c2 on the right or above or below with an appropriate tile
             (exists (?c2 - cell)
-                
                 (or
+                    ; c2 is on the right and it connects toward its left
                     (and
                         (is_right ?c2 ?c)
                         (open_left ?c2)
                     )
+                    ; c2 is above and it connects toward below
                     (and
                         (is_above ?c2 ?c)
                         (open_below ?c2)
                     )
+                    ; c2 is below and it connects toward above
                     (and
                         (is_above ?c ?c2)
                         (open_above ?c2)
                     )
-                    
-                    
                 )
-
             )
         )
 
         :effect (and
-            ; c'e' la tile t su c
-            
+
+            ; cell c has tile t, that is not available anymore
             (has_tile ?c)
+            (used ?t)
+
+            ; cell c can connect with cells to its right, above and below
             (open_below ?c)
             (open_above ?c)
             (open_right ?c)
 
-            ; t e' usata
-            (used ?t)
-
             (increase (total-cost) 8)
-           
         )
     )
 
@@ -570,169 +558,179 @@
     
     ;############################################### TILE E ###############################################
 
+    ;  SHAPE:
+    ;    _
+    ;  _| |
+    ; |_  |
+    ;   |_|
     
     (:action place_tile_e
         :parameters (?c - cell ?t - tile_e)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile sotto deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere
-            ; di tipo: { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
+            ; the agent must not have paid any debt yet
             (not (started_paying))
 
-            ; t non deve essere gia' stata utilizzata
+            ; t must not have been used yet
             (not (used ?t))
-
-            ; non ci deve essere una tile su c
+            
+            ; cell c must not have a tile on it
             (not (has_tile ?c))
 
-                ; deve esserci almeno una cella a sx o sopra o sotto con un oro o una tile
+            ; there must be a cell c2 on the left or above or below with an appropriate tile
             (exists (?c2 - cell)
-                
                 (or
+                    ; c2 is on the left and it connects toward its right
                     (and
                         (is_right ?c ?c2)
                         (open_right ?c2)
                     )
+                    ; c2 is above and it connects toward below
                     (and
                         (is_above ?c2 ?c)
                         (open_below ?c2)
                     )
+                    ; c2 is below and it connects toward above
                     (and
                         (is_above ?c ?c2)
                         (open_above ?c2)
                     )
-
                 )
-
             )
         )
 
         :effect (and
-            ; c'e' la tile t su c
-            
+
+            ; cell c has tile t, that is not available anymore
             (has_tile ?c)
+            (used ?t)
+
+            ; cell c can connect with cells to its left, above and below
             (open_left ?c)
             (open_above ?c)
             (open_below ?c)
 
-            ; t e' usata
-            (used ?t)
-
-            ; segna che la cella e' ok
-              
-            (increase (total-cost) 8)   
-            
+            (increase (total-cost) 8)               
         )
     )
-
 
 
     
     ;############################################### TILE F ###############################################
 
+    ;  SHAPE:
+    ;    _
+    ;  _| |_
+    ; |_   _|
+    ;   |_|
 
     (:action place_tile_f
         :parameters (?c - cell ?t - tile_f)
         
         :precondition (and
-            ; non ci deve essere una tile, in una casella o a sx o dx o sotto o sopra ci deve essere o un oro o una tile,
-            ; e se c'e' una tile a dx deve essere di tipo: { 3, 6, 7, a, b, e, f }, se c'e' una tile sotto
-            ; deve essere di tipo { 9, a, b, c, d, e, f }, se c'e' una tile a sx deve essere di tipo:
-            ; { 3, 5, 7, 9, b, d, f }, se c'e' una tile sopra deve essere: { 5, 6, 7, c, d, e, f }
 
+            ; the agent must not have paid any debt yet
             (not (started_paying))
 
-            ; t non deve essere gia' stata utilizzata
+            ; t must not have been used yet
             (not (used ?t))
             
-            ; non ci deve essere una tile su c
+            ; cell c must not have a tile on it
             (not (has_tile ?c))
 
-                    ; deve esserci almeno una cella a sx o dx o sopra o sotto con un oro o una tile
+            ; there must be a cell c2 on the left or on the right or above or below with an appropriate tile
             (exists (?c2 - cell)
-            
                 (or
+                    ; c2 is on the left and it connects toward its right
                     (and
                         (is_right ?c ?c2)
                         (open_right ?c2)
                     )
+                    ; c2 is on the right and it connects toward its left
                     (and
                         (is_right ?c2 ?c)
                         (open_left ?c2)
                     )
+                    ; c2 is above and it connects toward below
                     (and
                         (is_above ?c2 ?c)
                         (open_below ?c2)
                     )
+                    ; c2 is below and it connects toward above
                     (and
                         (is_above ?c ?c2)
                         (open_above ?c2)
-                    )
-
-                            
+                    )                            
                 )
-
-                   
             )
         )
 
         :effect (and
-            ; c'e' la tile t su c
-            
+
+            ; cell c has tile t, that is not available anymore
             (has_tile ?c)
+            (used ?t)
+
+            ; cell c can connect with cells to its left, right, above and below
             (open_above ?c)
             (open_below ?c)
             (open_left ?c)
             (open_right ?c)
 
-            ; t e' usata
-            (used ?t)
-
             (increase (total-cost) 15)
-
         )
     )
 
 
-    ;############################################### ALTRO ###############################################
+
+    ;############################################### OTHER ###############################################
 
 
     (:action take_silver
         :parameters (?c - cell ?d - debt)
         
         :precondition (and
+            ; cell c must have the silver
             (has_silver ?c)
-            (has_tile ?c)
-            (has_debt ?d)
 
+            ; cell c must already have a tile on it
+            (has_tile ?c)
+
+            ; the agent must have debt d
+            (has_debt ?d)
         )
 
         :effect (and
-            ; hai preso l'argento e i token
+            ; cell c doesn't have a silver anymore
             (not (has_silver ?c))
-            (not  (has_debt ?d))
+
+            ; the agent doesn't have debt d anymore
+            (not (has_debt ?d))
             
+            ; the agent has started paying the debts
             (started_paying)
-              
         )
     )
+
+
 
     (:action pay_debt
         :parameters (?d - debt)
         
         :precondition (and
-                (has_debt ?d)
+            ; the agent must have debt d
+            (has_debt ?d)
         )
 
         :effect (and
+            ; the agent doesn't have debt d anymore
             (not (has_debt ?d))
 
+            ; the agent has started paying the debts
             (started_paying)
               
             (increase (total-cost) 15)
         )
     )
-
 )
