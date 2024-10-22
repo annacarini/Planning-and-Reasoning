@@ -11,14 +11,16 @@ In particular, we used:
 - **Greedy** (without reopening) search algorithm with the **ff** heuristic
 - **A\*** (with reopening) search algorithm with the **lmcut** heuristic
 
+#### Generating the problems
+
 The instances have been generated using the script [problemGenerator.py](Script_python/problemGenerator.py), that uses the class *Problem* defined inside [Problem.py](Script_python/Problem.py).<br/>
 
 Usage:<br/>
   
     cd Planning-and-Reasoning/
     python Script_python/problemGenerator.py
-    
-<br/>
+
+#### Drawing the plans
 
 The plans obtained have then been drawn using the script [planDrawer.py](Script_python/planDrawer.py).<br/>
 In order to draw the plans, a folder with the same name of the problem must exist inside "Script_python/", and it must contain:
