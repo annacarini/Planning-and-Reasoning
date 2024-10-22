@@ -1,55 +1,48 @@
-# Problem 2
+# Problem 1
 
 ### Code to generate the PDDL file
 
-        prob = Problem("problem2", 4, 7)
-        
-        # available tiles
-        prob.setTiles3(4)
-        prob.setTiles5(2)
-        prob.setTiles6(2)
-        prob.setTiles7(1)
-        prob.setTiles9(1)
-        prob.setTilesA(2)
-        prob.setTilesB(1)
-        prob.setTilesC(3)
-        prob.setTilesD(0)
-        prob.setTilesE(1)
-        prob.setTilesF(0)
-
-        # golds
-        prob.addGold(2,6)
-        prob.addGold(1,2)
-
-        # silvers
-        prob.addSilver(1,1)
-        prob.addSilver(0,6)
-        prob.addSilver(3,3)
-
-        # generate PDDL file
-        prob.generateProblemFile()
-        prob.generateInputForDrawing()
+	prob = Problem("problem1", 5, 5)
+	
+	# tiles disponibili
+	prob.setTiles3(3)
+	prob.setTiles5(1)
+	prob.setTiles6(2)
+	prob.setTiles7(0)
+	prob.setTiles9(2)
+	prob.setTilesA(1)
+	prob.setTilesB(0)
+	prob.setTilesC(3)
+	prob.setTilesD(1)
+	prob.setTilesE(0)
+	prob.setTilesF(1)
+	
+	#ori
+	prob.addGold(1,4)
+	prob.addGold(0,1)
+	prob.addGold(3,2)
+	
+	# argenti
+	prob.addSilver(0,2)
+	prob.addSilver(2,0)
+	prob.addSilver(4,3)
+	
+	# genera file PDDL
+	prob.generateProblemFile()
+	prob.generateInputForDrawing()
 
 ### HMAX, A* (no reopening)
 
 Plan obtained using **A\* (without reopening)** as search algorithm, and **hmax** as heuristic.
 
-<img src="problem2_sas_plan_hmax.png" alt="plan" width="300"/>
+<img src="problem1_sas_plan_hmax.png" alt="plan" width="250"/>
 
 | | |
 |--|--|
-| **Total time** | 2792.2s |
-| **Peak memory** | 11207776 KB |
-| **Plan cost** | 36 |
-| **Generated states** | 998738719 |
-
-	Expanded 60862207 state(s).
-	Reopened 0 state(s).
-	Evaluated 71891773 state(s).
-	Evaluations: 71891773
-	Generated 998738719 state(s).
-	Dead ends: 11029565 state(s).
-	Number of registered states: 71891773
+| **Total time** | 1400s |
+| **Peak memory** | 2.5G |
+| **Plan cost** | 44 |
+| **Expanded states** | 14 millions |
 
 	run with:  --search-memory-limit 11G --search "lazy_wastar([hmax()], reopen_closed=false)"
 
@@ -58,22 +51,14 @@ Plan obtained using **A\* (without reopening)** as search algorithm, and **hmax*
 
 Plan obtained using **A\* (without reopening)** as search algorithm, and **ff** as heuristic.
 
-<img src="problem2_sas_plan_ff.png" alt="plan" width="300"/>
+<img src="problem1_sas_plan_ff.png" alt="plan" width="250"/>
 
 | | |
 |--|--|
-| **Total time** | 2723.43s |
-| **Peak memory** | 10146244 KB |
-| **Plan cost** | 36 |
-| **Generated states** | 998738719 |
-
-	Expanded 55254641 state(s).
-	Reopened 0 state(s).
-	Evaluated 64115963 state(s).
-	Evaluations: 64115963
-	Generated 889034948 state(s).
-	Dead ends: 8861321 state(s).
-	Number of registered states: 64115963
+| **Total time** | 415s |
+| **Peak memory** | 0.9G |
+| **Plan cost** | 44 |
+| **Expanded states** | 1.4 millions |
 
 	run with:  --search-memory-limit 11G --search "lazy_wastar([ff()], reopen_closed=false)"
 
@@ -82,22 +67,22 @@ Plan obtained using **A\* (without reopening)** as search algorithm, and **ff** 
 
 Plan obtained using **greedy search (without reopening)** as search algorithm, and **ff** as heuristic.
 
-<img src="problem2_sas_plan_ff_greedy.png" alt="plan" width="300"/>
+<img src="problem1_sas_plan_ff_greedy.png" alt="plan" width="250"/>
 
 | | |
 |--|--|
-| **Total time** | 0.0479828s |
-| **Peak memory** | 12036 KB |
-| **Plan cost** | 51 |
+| **Total time** | 0.0314195s |
+| **Peak memory** | 11872 KB |
+| **Plan cost** | 73 |
 | **Generated states** | 4071 |
-
-	Expanded 318 state(s).
+	
+	Expanded 510 state(s).
 	Reopened 0 state(s).
-	Evaluated 352 state(s).
-	Evaluations: 352
-	Generated 4071 state(s).
-	Dead ends: 33 state(s).
-	Number of registered states: 352
+	Evaluated 520 state(s).
+	Evaluations: 520
+	Generated 3797 state(s).
+	Dead ends: 9 state(s).
+	Number of registered states: 520
 
 	run with:  --search-memory-limit 11G --search "lazy_greedy([ff()], reopen_closed=false)"
 
@@ -106,22 +91,14 @@ Plan obtained using **greedy search (without reopening)** as search algorithm, a
 
 Plan obtained using **A\* (with reopening)** as search algorithm, and **lmcut** as heuristic.
 
-<img src="problem2_sas_plan_lmcut.png" alt="plan" width="300"/>
+<img src="problem1_sas_plan_lmcut.png" alt="plan" width="250"/>
 
 | | |
 |--|--|
-| **Total time** | 3034.31s |
-| **Peak memory** | 10456908 KB |
-| **Plan cost** | 36 |
-| **Generated states** | 920702333 |
-
-	Expanded 56961080 state(s).
-	Reopened 0 state(s).
-	Evaluated 66413608 state(s).
-	Evaluations: 66413608
-	Generated 920702333 state(s).
-	Dead ends: 9452527 state(s).
-	Number of registered states: 66413608
+| **Total time** | 750s |
+| **Peak memory** | 1G |
+| **Plan cost** | 44 |
+| **Expanded states** | 1.4 millions |
 
 	run with:  --search-memory-limit 11G --search "lazy_wastar([lmcut()], reopen_closed=true)"
  
