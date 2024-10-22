@@ -1,0 +1,20 @@
+
+-------- HMAX --------
+
+time = 1850s
+memory = 4.4G
+expanded nodes = 14 mln
+
+-------- FF --------
+
+time = 780s
+memory = 1.2G
+expanded nodes = 2.4 mln
+
+-------- LMCUT --------
+
+time = 770s
+memory = 1.2G
+expanded nodes = 2.5 mln
+
+

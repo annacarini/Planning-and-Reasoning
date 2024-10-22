@@ -324,33 +324,31 @@ prob.addSilver(4,3)
 # ################## ISTANZA 3 NEW ##################
 # #
 
-'''
-prob = Problem("new_problem3", 6, 5)
+
+prob = Problem("new_problem3", 4, 5)
 
 # tiles disponibili
 prob.setTiles3(3)
-prob.setTiles5(1)
+prob.setTiles5(2)
 prob.setTiles6(2)
-prob.setTiles7(2)
+prob.setTiles7(1)
 prob.setTiles9(1)
 prob.setTilesA(2)
-# prob.setTilesB(1)
-prob.setTilesC(4)
-prob.setTilesD(1)
+prob.setTilesB(1)
+prob.setTilesC(3)
+# prob.setTilesD(1)
 prob.setTilesE(1)
 # prob.setTilesF(1)
 
 #ori
-prob.addGold(2,2)
-prob.addGold(1,1)
-prob.addGold(5,3)
+prob.addGold(0,1)
+prob.addGold(3,3)
 
 # argenti
-prob.addSilver(3,0)
-prob.addSilver(0,3)
-prob.addSilver(2,4)
-prob.addSilver(4,2)
-'''
+prob.addSilver(2,0)
+prob.addSilver(0,4)
+prob.addSilver(2,2)
+
 
 
 ################### ISTANZA 4 NEW ##################
