@@ -35,7 +35,7 @@
 
 We ran **LAMA-2011** and we obtained 7 plans, of progressively smaller costs. The first and last one are shown here:
 
-<img src="" alt="plan" width="260"/> |  <img src="" alt="plan" width="260"/>
+<img src="problem5_sas_plan1.png" alt="plan" width="280"/> |  <img src="problem5_sas_plan7.png" alt="plan" width="280"/>
 :-------------------------:|:-------------------------:
 Plan 1  |  Plan 7
 
@@ -54,8 +54,8 @@ Information about all the generated plans:
 
 | | |
 |--|--|
-| **Total time** |  |
-| **Peak memory** |  |
+| **Total time** | > 1h 26m |
+| **Peak memory** | > 11 GB |
 
 	run with:  --search-memory-limit 11G --alias seq-sat-lama-2011
 
