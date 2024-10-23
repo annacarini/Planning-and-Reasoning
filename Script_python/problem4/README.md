@@ -48,12 +48,12 @@ Information about all the generated plans:
 | 3 | 0.0191639s | 49 | 150 | 1545 |
 | 4 | 0.0844012s | 47 | 590 | 6045 |
 | 5 | 0.824973s | 38 | 7009 | 94799 |
-| FINISH |  | - |  |  |
+| FINISH | 2597.88s | - | 15774743 | 328818795 |
 
 | | |
 |--|--|
-| **Total time** |  |
-| **Peak memory** |  |
+| **Total time** | 2599.69s |
+| **Peak memory** | 5877788 KB |
 
 	run with:  --search-memory-limit 11G --alias seq-sat-lama-2011
 
