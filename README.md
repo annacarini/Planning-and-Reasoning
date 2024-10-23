@@ -2,9 +2,42 @@
 
 ## Domain
 
+The domain consists in a field divided in cells (a grid), with some cells containing pieces of gold and pieces of silver. There are some tiles, that can be used to build a path in the field. The goal is to
+connect all the pieces of gold building the path using the available tiles.
+
+<img src="img/example.png" alt="plan" width="250"/>
+
+The agent starts with some "debts" (same amount as the silver pieces on the field) that can be eliminated for free by picking up silver pieces, or they can be "paid off" with a specific action. In order for a plan to be valid, all the debts must have been eliminated/paid.<br/>
+
+The available actions are:
+- Place a tile on a cell
+- Pay a debt
+- Pick up a silver piece to eliminate a debt without paying
+
+The challenge is to minimize the cost, by taking the pieces of silver trying to not spend too much doing the various actions. Each tile has a different cost to be placed.
+
+<img src="img/tiles.png" alt="plan" width="350"/>
+
+| Tile to place | Cost |
+|--|--|
+| Tile 3, Tile C | 6 |
+| Tile 5, Tile 6, Tile 9, Tile A | 2 |
+| Tile 7, Tile B, Tile D, Tile E | 8 |
+| Tile F | 15 |
+
+Paying a debt costs 15.
+
+
+## Planning system
+
+<img src="img/fast-downward-logo.png" alt="plan" width="150"/>
+
+We used [Fast Downward](https://github.com/aibasel/downward) as planning system.
+
+
 ## Tests
 
-We generated five instances of problems, and we tested them using three different heuristics.<br/>
+We generated five instances of problems, and we tested them using the planner **LAMA-2011**, and the search algorithms **A\*** and **Greedy** with three different heuristics.<br/>
 In particular, we used:
 - **A\*** (without reopening) search algorithm with the **hmax** heuristic
 - **A\*** (without reopening) search algorithm with the **ff** heuristic
