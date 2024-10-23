@@ -1,5 +1,5 @@
 (define (domain progetto)
-    (:requirements :strips :typing :disjunctive-preconditions :negative-preconditions :action-costs :equality)
+    (:requirements :strips :typing :disjunctive-preconditions :negative-preconditions :action-costs)
 
     (:types
         cell - object
