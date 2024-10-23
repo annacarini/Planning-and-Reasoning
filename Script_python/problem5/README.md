@@ -54,7 +54,7 @@ Information about all the generated plans:
 
 | | |
 |--|--|
-| **Total time** | > 1h 26m |
+| **Total time** | > 1h 37m |
 | **Peak memory** | > 11 GB |
 
 	run with:  --search-memory-limit 11G --alias seq-sat-lama-2011
