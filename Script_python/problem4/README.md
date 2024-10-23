@@ -35,7 +35,7 @@
 
 We ran **LAMA-2011** and we obtained 5 plans, of progressively smaller costs. The first and last one are shown here:
 
-<img src="problem4_sas_plan1.png" alt="plan" width="280"/> |  <img src="problem4_sas_plan5.png" alt="plan" width="280"/>
+<img src="problem4_sas_plan1.png" alt="plan" width="120"/> |  <img src="problem4_sas_plan5.png" alt="plan" width="120"/>
 :-------------------------:|:-------------------------:
 Plan 1  |  Plan 5
 
